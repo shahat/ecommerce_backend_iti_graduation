@@ -5,7 +5,7 @@ const { promisify } = require("util");
 
 // Generate token
 function generateToken(id) {
-  return jwt.sign({ id }, process.env.SECRET, {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: "1h",
   });
 }
@@ -87,7 +87,10 @@ const protect = async (req, res, next) => {
     return res.status(401).json({ message: "please login first" });
   }
   try {
-    let decode = await promisify(jwt.verify)(authorization, process.env.SECRET);
+    let decode = await promisify(jwt.verify)(
+      authorization,
+      process.env.JWT_SECRET
+    );
     req.id = decode.id;
     // Check if the user exists in the database
     const user = await usersModel.findById(decode.id);
