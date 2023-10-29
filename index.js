@@ -1,7 +1,7 @@
 // step-1 =>  require nongoose , express , and also define the routes
 const express = require("express");
 const mongoose = require("mongoose");
-
+require("dotenv").config();
 const cors = require("cors");
 const app = express();
 
@@ -41,9 +41,7 @@ app.use((err, req, res, next) => {
 });
 
 mongoose
-  .connect(
-    "mongodb+srv://normaluser:normaluser123@market.mo3v4yc.mongodb.net/market?retryWrites=true&w=majority"
-  )
+  .connect(process.env.Db_connection)
   .then(() => {
     console.log("success connect to database");
   })
@@ -51,6 +49,6 @@ mongoose
     console.log(err);
   });
 
-app.listen(4000, () => {
+app.listen(process.env.PORT, () => {
   console.log("listining to port 4000");
 });
