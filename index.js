@@ -44,7 +44,7 @@ app.use((err, req, res, next) => {
 });
 
 mongoose
-  .connect(process.env.Db_connection)
+  .connect(process.env.DB_CONNECTION)
   .then(() => {
     console.log("success connect to database");
   })
@@ -52,6 +52,6 @@ mongoose
     console.log(err);
   });
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || 4000, () => {
   console.log("listining to port 4000");
 });
