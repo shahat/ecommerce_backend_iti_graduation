@@ -1,8 +1,5 @@
-const { title } = require("process");
 var productModel = require(`../models/product`);
-const { log } = require("console");
-const { json } = require("stream/consumers");
-const { match } = require("assert");
+
 
 /* ================================  save product ================================ */
 

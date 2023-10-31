@@ -18,7 +18,6 @@ const deleteOldCarts = require("./helpers/schedule");
 const connectDB = require("./config/db");
 const errorHandler = require("./middlewares/error");
 
-
 // Connect to DB
 connectDB();
 
@@ -26,7 +25,7 @@ connectDB();
 
 const port = process.env.PORT || 5000;
 
-// middlewares 
+// middlewares
 app.use(cors());
 app.use(express.json());
 deleteOldCarts();
@@ -49,7 +48,7 @@ app.use("*", function (req, res, next) {
 
 app.use("/", (req, res) => {
   return res.json({
-    message: "Welcome to the Node.js REST API using ExpressJS and MongoDB"
+    message: "Welcome to the Node.js REST API using ExpressJS and MongoDB",
   });
 });
 

@@ -1,7 +1,7 @@
 var express = require(`express`);
 var router = express.Router();
 var productController = require(`../controller/product`);
-const { protect } = require("../controller/authController");
+// const { protect } = require("../controller/authController");
 
 router.get(`/`, productController.getProducts);
 router.post(`/`, productController.saveProduct);
