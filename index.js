@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const cors = require("cors");
 const app = express();
-
 const authRouter = require("./routes/authRouter");
 const productRouter = require("./routes/product");
 const ordersRouter = require("./routes/orders");
@@ -13,13 +12,26 @@ const cartRouter = require("./routes/cart");
 const wishRouter = require("./routes/wishlist");
 const categoryRoute = require("./routes/categoryRoute");
 const subCategoryRoute = require("./routes/subCategoryRoute");
-
 // schedule Function to delete old guest carts
 const deleteOldCarts = require("./helpers/schedule");
-deleteOldCarts();
 
+const connectDB = require("./config/db");
+const errorHandler = require("./middlewares/error");
+
+
+// Connect to DB
+connectDB();
+
+// Express App
+
+const port = process.env.PORT || 5000;
+
+// middlewares 
 app.use(cors());
 app.use(express.json());
+deleteOldCarts();
+
+// Routes
 
 app.use("/users", authRouter);
 app.use("/product", productRouter);
@@ -34,24 +46,20 @@ app.use("/subcategories", subCategoryRoute);
 app.use("*", function (req, res, next) {
   res.status(404).json({ message: "notfound" });
 });
-app.use(
-  cors({ origin: ["http://localhost:4000", "https://openmarket.onrender.com"] })
-);
 
-//  handling middleware error
-app.use((err, req, res, next) => {
-  res.status(500).json({ message: "something went wrong" });
+app.use("/", (req, res) => {
+  return res.json({
+    message: "Welcome to the Node.js REST API using ExpressJS and MongoDB"
+  });
 });
 
-mongoose
-  .connect(process.env.DB_CONNECTION)
-  .then(() => {
-    console.log("success connect to database");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+app.use(errorHandler);
 
-app.listen(process.env.PORT || 4000, () => {
-  console.log("listining to port 4000");
+const server = app.listen(port, () =>
+  console.log(`Server started listening on ${port}`)
+);
+
+process.on("unhandledRejection", (error, promise) => {
+  console.log(`Logged Error: ${error}`);
+  server.close(() => process.exit(1));
 });
