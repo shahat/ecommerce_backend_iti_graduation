@@ -13,7 +13,7 @@ const cartRouter = require("./routes/cart");
 const wishRouter = require("./routes/wishlist");
 const categoryRoute = require("./routes/categoryRoute");
 const subCategoryRoute = require("./routes/subCategoryRoute");
-
+const port = process.env.PORT || 4000;
 // schedule Function to delete old guest carts
 const deleteOldCarts = require("./helpers/schedule");
 deleteOldCarts();
