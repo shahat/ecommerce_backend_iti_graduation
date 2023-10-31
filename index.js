@@ -34,6 +34,9 @@ app.use("/subcategories", subCategoryRoute);
 app.use("*", function (req, res, next) {
   res.status(404).json({ message: "notfound" });
 });
+app.use(
+  cors({ origin: ["http://localhost:4000", "https://openmarket.onrender.com"] })
+);
 
 //  handling middleware error
 app.use((err, req, res, next) => {
