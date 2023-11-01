@@ -1,0 +1,27 @@
+{
+  "name": "assign",
+  "version": "1.0.0",
+  "description": "connect to mongo",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "mohamed elshahat",
+  "license": "ISC",
+  "devDependencies": {
+    "express": "^4.18.2",
+    "nodemon": "^3.0.1"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "core-util-is": "^1.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express-async-handler": "^1.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "mogoose": "^0.0.1-security",
+    "mongoose": "^6.10.1",
+    "node-schedule": "^2.1.1",
+    "validator": "^13.11.0"
+  }
+}
