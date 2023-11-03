@@ -8,7 +8,7 @@ var getAllCartProducts = async (req, res) => {
 
   if (userId) {
     try {
-      var data = await cartModel.findOne({ userId }).populate();
+      var data = await cartModel.findOne({ userId }).populate("items._id");
       res.status(200).json({ data });
     } catch (err) {
       res.status(404).json({ message: err });
@@ -24,7 +24,7 @@ var addUserCart = async (req, res) => {
   var cartId = req.body.cartId; // For testing
   // var userId = req.id // Actual code
   // var cartId = req.cartId // Actual testing
-  if (!userId) {
+  if (!userId) {  
     res.status(401).json("Unknown User");
   } else {
     try {
