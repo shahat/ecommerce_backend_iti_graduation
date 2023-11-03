@@ -8,7 +8,7 @@ const categorySchema = mongoose.Schema(
       minLength: [2, "too short category name"],
       maxLength: [32, "too long category name"],
     },
-    img: {
+    image: {
       type: String,
     },
   },
