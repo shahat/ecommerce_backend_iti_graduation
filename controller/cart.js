@@ -3,7 +3,7 @@ const cartModel = require("../models/cart");
 const productModel = require("../models/product");
 
 var getAllCartProducts = async (req, res) => {
-  var userId = req.body.id; // For testing
+  var userId = req.headers.id; // For testing
   // var userId = req.id // Actual code
 
   if (userId) {
