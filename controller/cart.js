@@ -8,7 +8,7 @@ var getAllCartProducts = async (req, res) => {
 
   if (userId) {
     try {
-      var data = await cartModel.findOne({ userId }).populate("items._id");
+      var data = await cartModel.findOne({ userId }).populate("items._id", "title quantity price discountPercentage priceAfterDescount -_id");
       res.status(200).json({ data });
     } catch (err) {
       res.status(404).json({ message: err });
