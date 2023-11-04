@@ -8,7 +8,7 @@ function deleteOldCarts(){
   schedule.scheduleJob("0 0 * * *", async () => {
     const expirationTime = new Date() - 2592000;  // 1 month past
     // Find and delete documents where expirationTime is less than the time of the last Update
-    await cartModel.deleteMany({ updatedAt: { $lte: expirationTime }}).catch(err => console.log(err));
+    await cartModel.deleteMany({ guest:true, updatedAt: { $lte: expirationTime }}).catch(err => console.log(err));
     console.log("deleted");
   });
 }
