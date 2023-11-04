@@ -3,12 +3,12 @@ const cartModel = require("../models/cart");
 const productModel = require("../models/product");
 
 var getAllCartProducts = async (req, res) => {
-    var userId = req.body.id; // For testing
+    var userId = req.headers.id; // For testing
     // var userId = req.id // Actual code
 
     if (userId) {
         try {
-            var data = await cartModel.findOne({ userId }).populate();
+            var data = await cartModel.findOne({ userId }).populate("items._id", "title quantity price discountPercentage priceAfterDescount -_id");
             res.status(200).json({ data });
         } catch (err) {
             res.status(404).json({ message: err });
@@ -82,7 +82,7 @@ var addUserCart = async (req, res) => {
 };
 
 var addOneProductToCart = async (req, res) => {
-    var userId = req.body.id; // For testing
+    var userId = req.headers.id; // For testing
     // var userId = req.id // Actual code
     var { productId, quantity } = req.body;
     var data = { guest: false };
@@ -138,7 +138,7 @@ var addOneProductToCart = async (req, res) => {
                 { userId, "items._id": productId },
                 { $inc: { "items.$.quantity": 1 } }
             );
-            res.status(401).json({
+            res.status(302).json({
                 message: "We added another item of this Product to your cart",
             });
         }
