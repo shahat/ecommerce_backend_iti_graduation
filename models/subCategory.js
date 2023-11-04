@@ -14,6 +14,9 @@ const subCategorySchema = mongoose.Schema(
       ref: "category",
       required: [true, " please enter the category "],
     },
+    img: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
