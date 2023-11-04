@@ -14,12 +14,12 @@ router.get("/", getAllCartProducts);
 // user and guest user 
 router.post("/", addUserCart);
 // user and guest user 
-router.post("/product",addOneProductToCart);
+router.post("/:productId",addOneProductToCart);
 // user and guest user 
 router.patch("/", modifyOneProductFromCart);
 // user and guest user 
-router.patch("/:id", removeOneProductFromCart);
-
+router.patch("/:productId", removeOneProductFromCart);
+// user only
 router.delete("/", deleteUserCart);
 
 module.exports = router;

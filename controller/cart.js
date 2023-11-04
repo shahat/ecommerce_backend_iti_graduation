@@ -8,7 +8,12 @@ var getAllCartProducts = async (req, res) => {
 
     if (userId) {
         try {
-            var data = await cartModel.findOne({ userId }).populate("items._id", "title quantity price discountPercentage priceAfterDescount -_id");
+            var data = await cartModel
+                .findOne({ userId })
+                .populate(
+                    "items._id",
+                    "title quantity price discountPercentage priceAfterDescount -_id"
+                );
             res.status(200).json({ data });
         } catch (err) {
             res.status(404).json({ message: err });
@@ -84,7 +89,8 @@ var addUserCart = async (req, res) => {
 var addOneProductToCart = async (req, res) => {
     var userId = req.headers.id; // For testing
     // var userId = req.id // Actual code
-    var { productId, quantity } = req.body;
+    var { quantity } = req.body;
+    var { productId } = req.params;
     var data = { guest: false };
     // case a guest added to cart===============>
     // create a guest cart then add to it
@@ -188,7 +194,7 @@ var modifyOneProductFromCart = async (req, res) => {
 var removeOneProductFromCart = async (req, res) => {
     var userId = req.body.id; // For testing
     // var userId = req.id // Actual code
-    var productId = req.params.id;
+    var { productId } = req.params;
     console.log(productId);
     try {
         var deleteNotification = await cartModel.updateOne(

@@ -21,7 +21,6 @@ var getProducts = async (req, res) => {
   //filter
   //equale
   var queryStringObj = { ...req.query };
-  console.log("ay kalam ");
   var excludesFieldes = [`page`, `sort`, `limit`, `fields`];
   excludesFieldes.forEach((field) => delete queryStringObj[field]);
   // console.log(queryStringObj);
