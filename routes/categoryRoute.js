@@ -12,6 +12,7 @@ const app = express();
 var router = express.Router();
 
 // middleware to send any request on this endpoint to subcategory route
+
 router.use("/:categoryId/subcategories", subCategoryRoute);
 
 router.post("/", createCategory);

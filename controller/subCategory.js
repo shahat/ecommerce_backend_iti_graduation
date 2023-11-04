@@ -13,10 +13,10 @@ const setCategoryIdToBody = (req, res, next) => {
 const createSubCategory = asyncHandler(async (req, res) => {
   // Nested route
   if (!req.body.category) req.body.category = req.params.categoryId;
-  const { name, category } = req.body;
-  const subCategory = await subCategoryModel.create({ name, category });
+  const { name, parentCategory } = req.body;
+  const subCategory = await subCategoryModel.create({ name, parentCategory });
   res.status(201).json({
-    message: "Category has been created succesfully",
+    message: "subCategory has been created succesfully",
     data: subCategory,
   });
 });

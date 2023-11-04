@@ -92,25 +92,35 @@ var saveProduct = async (req, res) => {
 //     res.status(404).json({ message: err.message });
 //   }
 // };
+
+//  filter
+// equale
+
+// var queryStringObj = { ...req.query };
+// var excludesFieldes = [`page`, `sort`, `limit`, `fields`];
+
+// excludesFieldes.forEach((field) => delete queryStringObj[field]);
+// let queryStr = JSON.stringify(queryStringObj);
+// queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+
 // ================================================
-
+let query = {};
 const getProducts = async (req, res) => {
-  //  filter
-  // equale
-
-  // var queryStringObj = { ...req.query };
-  // var excludesFieldes = [`page`, `sort`, `limit`, `fields`];
-
-  // excludesFieldes.forEach((field) => delete queryStringObj[field]);
-  // let queryStr = JSON.stringify(queryStringObj);
-  // queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-
   try {
-    let mongooseQuery = productModel.find(); // Replace `productModel` with your actual Mongoose model.
+    let mongooseQuery = productModel.find(query); // Replace `productModel` with your actual Mongoose model.
 
     // Filtering and excluding query parameters
-    const { page, limit, sort, fields, keyword, ...filters } = req.query;
-
+    const {
+      page,
+      limit,
+      sort,
+      fields,
+      keyword,
+      priceMin,
+      priceMax,
+      ...filters
+    } = req.query;
+    console.log("this is filters ", filters);
     // Apply filters (excluding pagination, sorting, fields, and cd)
     for (const key in filters) {
       mongooseQuery = mongooseQuery.where(key, filters[key]);
@@ -118,7 +128,7 @@ const getProducts = async (req, res) => {
 
     // Pagination
     const currentPage = parseInt(page) || 1;
-    const perPage = parseInt(limit) || 10;
+    const perPage = parseInt(limit) || 12;
     const skip = (currentPage - 1) * perPage;
 
     mongooseQuery = mongooseQuery.skip(skip).limit(perPage);
@@ -136,6 +146,10 @@ const getProducts = async (req, res) => {
       mongooseQuery = mongooseQuery.select(fields.split(",").join(" "));
     } else {
       mongooseQuery = mongooseQuery.select("-__v");
+    }
+
+    if (priceMin && priceMax) {
+      mongooseQuery = mongooseQuery.where("price").gte(priceMin).lte(priceMax);
     }
 
     // Search
