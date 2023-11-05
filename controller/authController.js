@@ -45,16 +45,14 @@ const signUp = async (req, res) => {
 // =========================== signIn ===========================
 
 const signIn = async (req, res) => {
-  console.log("sign in func()");
+  console.log("request is RECEIVED ");
   const { email, password } = req.body;
-  console.log(email, password);
 
   // Check if email & password are present in the request body
   if (!email || !password) {
-    console.log("inside if ");
     return res
       .status(400)
-      .json({ message: "Please provide your username and password" });
+      .json({ message: "Please provide your email and password" });
   }
 
   // Check if the user with the given email exists in our DB

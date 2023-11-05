@@ -10,11 +10,9 @@ const ordersRouter = require("./routes/orders");
 const reviewsRouter = require("./routes/reviews");
 const cartRouter = require("./routes/cart");
 const wishRouter = require("./routes/wishlist");
-const categoryRoute = require("./routes/categoryRoute");
-const subCategoryRoute = require("./routes/subCategoryRoute");
+const usersRouter = require("./routes/usersRouter");
 // schedule Function to delete old guest carts
 const deleteOldCarts = require("./helpers/schedule");
-
 const connectDB = require("./config/db");
 const errorHandler = require("./middlewares/error");
 
@@ -38,8 +36,7 @@ app.use("/orders", ordersRouter);
 app.use("/reviews", reviewsRouter);
 app.use("/cart", cartRouter);
 app.use("/wish", wishRouter);
-app.use("/categories", categoryRoute);
-app.use("/subcategories", subCategoryRoute);
+
 
 // handle not found not found middleware
 app.use("*", function (req, res, next) {

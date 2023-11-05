@@ -11,7 +11,7 @@ const {
   getOneUser,
   updateOneUser,
   deleteOneUser,
-} = require("../controller/user-controller.js");
+} = require("../controller/user");
 
 // step-3 => define the function the you import from the controller on the route
 
@@ -20,7 +20,7 @@ router.get("/:limit/:skip", getAllUsers);
 router.get("/:id", getOneUser);
 router.put("/:id", updateOneUser);
 router.delete("/:id", deleteOneUser);
-router.post("/login", login);
-router.post("/login", signin);
+// router.post("/login", login);
+// router.post("/login", signin);
 
 module.exports = router;

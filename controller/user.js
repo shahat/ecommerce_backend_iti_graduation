@@ -14,32 +14,31 @@ const createUser = async (req, res) => {
   }
 };
 // Get users
-const getAllUsers = async (req, auth, res) => {
+const getAllUsers = async (req, res) => {
   let limit = parseInt(req.params.limit);
   let skip = parseInt(req.params.skip);
 
   try {
     let users = await usersModel.find().limit(limit).skip(skip);
-    res.status(200).json(users);
+    res.status(200).json({ message: users });
   } catch (err) {
-    res.status(500).json({ message: "something Went rong " });
+    res.status(500).json({ message: "Something went wrong " });
   }
 };
 
-
 // Get user  =>   id
-const getOneUser = async (req, auth, res) => {
+const getOneUser = async (req, res) => {
   let id = req.params.id;
   try {
     let user = await usersModel.findOne({ _id: id }, "firstName");
-    res.status(200).json(user);
+    const response = res.status(200).json(user);
   } catch (err) {
     res.status(404).json({ message: "Cant find this ID " });
   }
 };
 
 // update user => id
-const updateOneUser = async (req, auth, res) => {
+const updateOneUser = async (req, res) => {
   let { id } = req.params;
   let { username } = req.body;
   try {
@@ -50,13 +49,13 @@ const updateOneUser = async (req, auth, res) => {
   }
 };
 // Delete user => id
-const deleteOneUser = async (req, auth, res) => {
+const deleteOneUser = async (req, res) => {
   let { id } = req.params;
   try {
     let user = await usersModel.deleteOne({ _id: id });
     res.status(200).json(user);
   } catch (err) {
-    res.status(500).json({ message: " Error in deleting the user  " });
+    res.status(500).json({ message: " Error in deleting the user " });
   }
 };
 
