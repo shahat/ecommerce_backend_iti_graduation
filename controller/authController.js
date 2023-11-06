@@ -16,16 +16,18 @@ const signUp = async (req, res) => {
   const { email } = req.body;
 
   const userId = req.param.id;
+  console.log(req.body);
 
   if (!email) {
-    return res.status(400).json({ message: "please provide your user email " });
+    return res.status(400).json({ message: "please provide your email" });
   }
   const user = await usersModel.findOne({ email });
   try {
     if (user)
       return res
         .status(404)
-        .json({ message: " You have an accout please signIn " });
+        .json({ message: " You have an accout please signin " });
+
     if (userId) {
       req.body._id = userId;
     }
