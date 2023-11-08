@@ -1,10 +1,15 @@
 const mongoose = require("mongoose");
 const cartModel = require("../models/cart");
 const productModel = require("../models/product");
+const jwt = require("jsonwebtoken");
+
+var userIdFromToken = (req) => {
+    var { token } = req.body;
+    return jwt.decode(token).id;
+};
 
 var getAllCartProducts = async (req, res) => {
-    var userId = req.headers.id; // For testing
-    // var userId = req.id // Actual code
+    var userId = userIdFromToken(req);
 
     if (userId) {
         try {
@@ -25,9 +30,8 @@ var getAllCartProducts = async (req, res) => {
 };
 
 var addUserCart = async (req, res) => {
-    var userId = req.body.id; // For testing
+    var userId = userIdFromToken(req);
     var cartId = req.body.cartId; // For testing
-    // var userId = req.id // Actual code
     // var cartId = req.cartId // Actual testing
     if (!userId) res.status(401).json("Unknown User");
 
@@ -87,8 +91,8 @@ var addUserCart = async (req, res) => {
 };
 
 var addOneProductToCart = async (req, res) => {
-    var userId = req.headers.id; // For testing
-    // var userId = req.id // Actual code
+    var userId = userIdFromToken(req);
+
     var { quantity } = req.body;
     var { productId } = req.params;
     var data = { guest: false };
@@ -154,8 +158,8 @@ var addOneProductToCart = async (req, res) => {
 };
 
 var modifyOneProductFromCart = async (req, res) => {
-    var userId = req.headers.id; // For testing
-    // var userId = req.id // Actual code
+    var userId = userIdFromToken(req);
+
     var { productId, quantity, priceWhenAdded } = req.body;
     if (!productId) {
         res.status(401).json({ message: "Must provide the product id" });
@@ -192,8 +196,8 @@ var modifyOneProductFromCart = async (req, res) => {
 };
 
 var removeOneProductFromCart = async (req, res) => {
-    var userId = req.headers.id; // For testing
-    // var userId = req.id // Actual code
+    var userId = userIdFromToken(req);
+
     var { productId } = req.params;
     try {
         var deleteNotification = await cartModel.updateOne(
@@ -207,8 +211,8 @@ var removeOneProductFromCart = async (req, res) => {
 };
 
 var deleteUserCart = async (req, res) => {
-    var userId = req.body.id; // For testing
-    // var userId = req.id // Actual code
+    var userId = userIdFromToken(req);
+
     try {
         var deleteNotification = await cartModel.deleteOne({ userId });
         res.status(202).json({ data: deleteNotification });
