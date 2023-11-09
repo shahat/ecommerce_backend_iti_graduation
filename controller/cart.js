@@ -5,11 +5,18 @@ const jwt = require("jsonwebtoken");
 
 var userIdFromToken = (req) => {
     var { token } = req.body;
-    return jwt.decode(token).id;
+    if (token) {
+        const { id } = jwt.decode(token);
+        return id;
+    }
 };
 
 var getAllCartProducts = async (req, res) => {
-    var userId = userIdFromToken(req);
+    var userId
+    var { token } = req.headers
+    if (token) {
+        userId = jwt.decode(token).id;
+    }
 
     if (userId) {
         try {
@@ -31,6 +38,7 @@ var getAllCartProducts = async (req, res) => {
 
 var addUserCart = async (req, res) => {
     var userId = userIdFromToken(req);
+    var userId = req.body.id;
     var cartId = req.body.cartId; // For testing
     // var cartId = req.cartId // Actual testing
     if (!userId) res.status(401).json("Unknown User");
@@ -102,6 +110,7 @@ var addOneProductToCart = async (req, res) => {
         try {
             userId = new mongoose.Types.ObjectId();
             data = await cartModel.create({ userId, guest: true, items: [] });
+            // res.status(201).json({ data: data.data.data })
         } catch (err) {
             if (err.message.includes("duplicate key")) {
                 let message = {
@@ -137,6 +146,7 @@ var addOneProductToCart = async (req, res) => {
                     data: updateNotification,
                     userId,
                     guest: data.guest,
+                    data
                 });
             } else if (updateNotification.matchedCount === 0) {
                 res.status(404).json({
@@ -147,9 +157,10 @@ var addOneProductToCart = async (req, res) => {
             var updateNotification = await cartModel.updateOne(
                 { userId, "items._id": productId },
                 { $inc: { "items.$.quantity": 1 } }
-            );
-            res.status(302).json({
+                );
+            res.status(203).json({
                 message: "We added another item of this Product to your cart",
+                userId
             });
         }
     } catch (err) {
@@ -164,19 +175,22 @@ var modifyOneProductFromCart = async (req, res) => {
     if (!productId) {
         res.status(401).json({ message: "Must provide the product id" });
     } else {
-        var { items } = await cartModel.findOne(
-            { userId, "items._id": { $eq: productId } },
-            { items: 1, _id: 0 }
-        );
-        for (var product of items) {
-            if (product._id === productId) {
-                if (!quantity) {
-                    quantity = product.quantity;
-                }
-                if (!priceWhenAdded) {
-                    priceWhenAdded = product.priceWhenAdded;
+        try {
+            var { items } = await cartModel.findOne(
+                { userId, "items._id": { $eq: productId } },
+                { items: 1, _id: 0 }
+            );
+            for (var product of items) {
+                if (product._id === productId) {
+                    if (!quantity) {
+                        quantity = product.quantity;
+                    }
+                    if (!priceWhenAdded) {
+                        priceWhenAdded = product.priceWhenAdded;
+                    }
                 }
             }
+        } catch(error){
         }
     }
     try {
