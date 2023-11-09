@@ -14,100 +14,22 @@ var saveProduct = async (req, res) => {
   }
 };
 
-/* ================================  get products on page (pagination) ================================ */
+/* ================================ get proudect  ================================*/
 
-// var getProducts = async (req, res) => {
-//   //filter
-//   //equale
-
-//   console.log("this is req query ", req.query);
-//   var queryStringObj = { ...req.query };
-
-//   console.log("ay kalam ");
-
-//   var excludesFieldes = [`page`, `sort`, `limit`, `fields`];
-
-//   excludesFieldes.forEach((field) => delete queryStringObj[field]);
-
-//   // console.log(queryStringObj);
-//   //($gte) , ($lte) ,($gt),($lt)
-
-//   let queryStr = JSON.stringify(queryStringObj);
-//   queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-//   // console.log(queryStringObj);
-//   // console.log(JSON.parse(queryStr));
-
-//   try {
-//     //pagenation
-//     var page = parseInt(req.query.page) || 1;
-//     var limit = parseInt(req.query.limit) || 9;
-//     var skip = (page - 1) * limit;
-
-//     //build query
-//     var mongooseQuery = productModel
-//       .find(JSON.parse(queryStr))
-//       .skip(skip)
-//       .limit(limit);
-//     // .populate({ path: `categoryId`, select: `name` });
-
-//     /* ================================  Sorting  ================================ */
-//     if (req.query.sort) {
-//       var sortQuery = req.query.sort.split(`,`).join(` `);
-//       mongooseQuery = mongooseQuery.sort(sortQuery);
-//     } else {
-//       mongooseQuery = mongooseQuery.sort(`-createdAt`);
-//     }
-
-//     /* ================================ fields limiting ================================ */
-
-//     if (req.query.fields) {
-//       var fields = req.query.fields.split(`,`).join(` `);
-//       mongooseQuery = mongooseQuery.select(fields);
-//     } else {
-//       mongooseQuery = mongooseQuery.select(`-__v`);
-//     }
-
-//     /* ================================ Search ================================*/
-
-//     if (req.query.keyword) {
-//       let keyword = req.query.keyword;
-//       console.log("this is the query ", req.query.keyword);
-//       const query = {
-//         $or: [
-//           { title: { $regex: keyword, $options: "i" } }, // Case-insensitive search
-//           { description: { $regex: keyword, $options: "i" } }, // Case-insensitive search
-//         ],
-//       };
-//       mongooseQuery = mongooseQuery.where(query);
-
-//       // console.log("hhhhhhhhhhhhhhhhh", query);
-//       // mongooseQuery = mongooseQuery.find(query);
-//     }
-
-//     // var products = await mongooseQuery;
-//     const products = await mongooseQuery.exec(); // Execute the query
-//     console.log("after finding products", products);
-//     res.status(200).json({ results: products.length, page, data: products });
-//   } catch (err) {
-//     res.status(404).json({ message: err.message });
-//   }
-// };
-
-//  filter
-// equale
-
-// var queryStringObj = { ...req.query };
-// var excludesFieldes = [`page`, `sort`, `limit`, `fields`];
-
-// excludesFieldes.forEach((field) => delete queryStringObj[field]);
-// let queryStr = JSON.stringify(queryStringObj);
-// queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-
-// ================================================
 let query = {};
 const getProducts = async (req, res) => {
   try {
-    let mongooseQuery = productModel.find(query); // Replace `productModel` with your actual Mongoose model.
+    let mongooseQuery = productModel.find(query);
+
+    // this funciton for retrive aall products length
+    // async function getLengthOfProducts() {
+    //   const products = await mongooseQuery.toArray();
+    //   const length = products.length;
+    //   return length;
+    // }
+
+    // const length = await getLengthOfProducts();
+    // conosle.log("length", length);
 
     // Filtering and excluding query parameters
     const {
@@ -118,6 +40,8 @@ const getProducts = async (req, res) => {
       keyword,
       priceMin,
       priceMax,
+      color,
+
       ...filters
     } = req.query;
     console.log("this is filters ", filters);
@@ -150,6 +74,10 @@ const getProducts = async (req, res) => {
 
     if (priceMin && priceMax) {
       mongooseQuery = mongooseQuery.where("price").gte(priceMin).lte(priceMax);
+    }
+    if (color) {
+      const colorsArray = Array.isArray(color) ? color : [color];
+      mongooseQuery = mongooseQuery.where("colors").in(colorsArray);
     }
 
     // Search
