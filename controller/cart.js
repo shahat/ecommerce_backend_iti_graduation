@@ -13,20 +13,31 @@ var userIdFromBody = (req) => {
     }
     return userId;
 };
-var userIdFromHeaders = (req) => {
+var userIdFromParams = (req) => {
     var userId;
-    const { token, token2 } = req.headers;
+    const { token, token2 } = req.params;
     if (token) {
         userId = jwt.decode(token).id;
     } else if (token2) {
-        console.log(token2);
         userId = token2.userId;
+    }
+    return userId;
+};
+var userIdFromHeaders = (req) => {
+    var userId;
+    const { token } = req.headers;
+    if (token) {
+        try {
+            userId = jwt.decode(token).id;
+        } catch (err) {
+            userId = JSON.parse(token).userId;
+        }
     }
     return userId;
 };
 
 var getAllCartProducts = async (req, res) => {
-    var userId = userIdFromHeaders(req)
+    var userId = userIdFromHeaders(req);
 
     if (userId) {
         try {
@@ -36,7 +47,7 @@ var getAllCartProducts = async (req, res) => {
                     "items._id",
                     "title quantity price discountPercentage priceAfterDescount description thumbnail "
                 );
-                console.log(data);
+            // console.log(data);
             res.status(200).json({ data });
         } catch (err) {
             res.status(404).json({ message: err });
@@ -110,7 +121,7 @@ var addUserCart = async (req, res) => {
 };
 
 var addOneProductToCart = async (req, res) => {
-    var userId = userIdFromBody(req);
+    var userId = userIdFromHeaders(req);
 
     var { quantity } = req.body;
     var { productId } = req.params;
@@ -119,7 +130,7 @@ var addOneProductToCart = async (req, res) => {
     // create a guest cart then add to it
     if (!userId) {
         try {
-            userId = new mongoose.Types.ObjectId();
+            userId = mongoose.Types.ObjectId();
             data = await cartModel.create({ userId, guest: true, items: [] });
             // res.status(201).json({ data: data.data.data })
         } catch (err) {
@@ -133,6 +144,8 @@ var addOneProductToCart = async (req, res) => {
                 res.status(400).json({ message: err });
             }
         }
+        // console.log("user:",{userId});
+        // console.log("data:",data._id);
     }
     // adding the product to the users cart
     try {
@@ -153,10 +166,11 @@ var addOneProductToCart = async (req, res) => {
             );
             if (updateNotification.modifiedCount != 0) {
                 // if the product has been added successfully just respond with the update notification
+                // console.log("data",data);
                 res.status(202).json({
                     data: updateNotification,
-                    userId,
-                    guest: data.guest,
+                    // userId,
+                    // guest: data.guest,
                     data,
                 });
             } else if (updateNotification.matchedCount === 0) {
