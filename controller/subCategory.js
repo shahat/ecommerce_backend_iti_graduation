@@ -13,8 +13,12 @@ const setCategoryIdToBody = (req, res, next) => {
 const createSubCategory = asyncHandler(async (req, res) => {
   // Nested route
   if (!req.body.category) req.body.category = req.params.categoryId;
-  const { name, parentCategory } = req.body;
-  const subCategory = await subCategoryModel.create({ name, parentCategory });
+  const { name, parentCategory, image } = req.body;
+  const subCategory = await subCategoryModel.create({
+    name,
+    parentCategory,
+    image,
+  });
   res.status(201).json({
     message: "subCategory has been created succesfully",
     data: subCategory,
@@ -27,7 +31,7 @@ const createSubCategory = asyncHandler(async (req, res) => {
 // @access Public
 const getSubCategories = asyncHandler(async (req, res) => {
   const page = req.query.page * 1 || 1;
-  const limit = req.query.limit * 1 || 5;
+  const limit = req.query.limit * 1 || 20;
   const skip = (page - 1) * limit;
   // (2-1)*5=5
   let filterObject = {};
