@@ -47,7 +47,6 @@ var getAllCartProducts = async (req, res) => {
                     "items._id",
                     "title quantity price discountPercentage priceAfterDescount description thumbnail "
                 );
-            // console.log(data);
             res.status(200).json({ data });
         } catch (err) {
             res.status(404).json({ message: err });
@@ -132,7 +131,6 @@ var addOneProductToCart = async (req, res) => {
         try {
             userId = mongoose.Types.ObjectId();
             data = await cartModel.create({ userId, guest: true, items: [] });
-            // res.status(201).json({ data: data.data.data })
         } catch (err) {
             if (err.message.includes("duplicate key")) {
                 let message = {
@@ -144,8 +142,6 @@ var addOneProductToCart = async (req, res) => {
                 res.status(400).json({ message: err });
             }
         }
-        // console.log("user:",{userId});
-        // console.log("data:",data._id);
     }
     // adding the product to the users cart
     try {
@@ -166,7 +162,6 @@ var addOneProductToCart = async (req, res) => {
             );
             if (updateNotification.modifiedCount != 0) {
                 // if the product has been added successfully just respond with the update notification
-                // console.log("data",data);
                 res.status(202).json({
                     data: updateNotification,
                     // userId,
@@ -194,7 +189,7 @@ var addOneProductToCart = async (req, res) => {
 };
 
 var modifyOneProductFromCart = async (req, res) => {
-    var userId = userIdFromBody(req);
+    var userId = userIdFromHeaders(req);
 
     var { productId, quantity, priceWhenAdded } = req.body;
     if (!productId) {
@@ -234,7 +229,7 @@ var modifyOneProductFromCart = async (req, res) => {
 };
 
 var removeOneProductFromCart = async (req, res) => {
-    var userId = userIdFromBody(req);
+    var userId = userIdFromHeaders(req);
 
     var { productId } = req.params;
     try {
