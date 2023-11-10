@@ -58,7 +58,7 @@ const server = app.listen(port, () =>
   console.log(`Server started listening on ${port}`)
 );
 
-process.on("unhandledRejection", (error, promise) => {
-  console.log(`Logged Error: ${error}`);
-  server.close(() => process.exit(1));
-});
+// process.on("unhandledRejection", (error, promise) => {
+//   console.log(`Logged Error: ${error}`);
+//   server.close(() => process.exit(1));
+// });

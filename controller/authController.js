@@ -55,15 +55,36 @@ const signIn = async (req, res) => {
       .status(400)
       .json({ message: "please provide your user name and password" });
   }
-  // check the user is existed
+
+  // Check the user is existed
   const user = await usersModel.findOne({ email });
-  if (!user)
+
+  // Ensure the user object is fully populated before accessing the password
+  await Promise.all([user]);
+
+  if (!user) {
     return res
       .status(404)
-      .json({ message: " not existed user please register " });
-  let isValid = bcrypt.compare(password, user.password);
-  if (!isValid)
-    res.status(401).json({ message: " invalide email or password" });
+      .json({ message: "Not existed user please register" });
+  }
+
+  console.log("this is current user", user);
+
+  // Verify that the password field is not null or undefined
+  if (!user.password) {
+    return res
+      .status(500)
+      .json({ message: "Internal server error, password missing" });
+  }
+
+  // Wait for the password comparison to complete
+  let isValid = await bcrypt.compare(password, user.password);
+  console.log("this is the is valid", isValid);
+
+  if (!isValid) {
+    res.status(401).json({ message: "Invalid email or password" });
+  }
+
   res.status(200).json({ token: generateToken(user._id) });
 };
 
