@@ -4,6 +4,7 @@ const productModel = require("../models/product");
 const jwt = require("jsonwebtoken");
 
 var userIdFromBody = (req) => {
+    console.log(req);
     var userId;
     const { token, token2 } = req.body;
     if (token) {
@@ -24,21 +25,28 @@ var userIdFromParams = (req) => {
     return userId;
 };
 var userIdFromHeaders = (req) => {
-    var userId;
+    var userId, cartId, res;
     const { token } = req.headers;
     if (token) {
         try {
             userId = jwt.decode(token).id;
+            // console.log("=>",userId);
+            res = { userId }
+            // console.log(res);
         } catch (err) {
             userId = JSON.parse(token).userId;
+            cartId = JSON.parse(token).cartId;
+            res = {userId, cartId}
         }
     }
-    return userId;
+    // console.log("s",res);
+    return res;
 };
 
 var getAllCartProducts = async (req, res) => {
-    var userId = userIdFromHeaders(req);
-
+    var temp = userIdFromHeaders(req);
+    var userId = temp? temp.userId : undefined
+// console.log(1);
     if (userId) {
         try {
             var data = await cartModel
@@ -58,11 +66,9 @@ var getAllCartProducts = async (req, res) => {
 };
 
 var addUserCart = async (req, res) => {
-    var userId = userIdFromBody(req);
-    var userId = req.body.id;
-    var cartId = req.body.cartId; // For testing
-    // var cartId = req.cartId // Actual testing
-    if (!userId) res.status(401).json("Unknown User");
+    var { userId, cartId } = userIdFromHeaders(req);
+console.log(2);
+    if (!userId) res.status(401).json({ message: "Unknown User" });
 
     if (cartId) {
         // transferring the guest cart to the registered user
@@ -120,8 +126,9 @@ var addUserCart = async (req, res) => {
 };
 
 var addOneProductToCart = async (req, res) => {
-    var userId = userIdFromHeaders(req);
-
+    var temp = userIdFromHeaders(req);
+    var userId = temp? temp.userId : undefined
+console.log(3);
     var { quantity } = req.body;
     var { productId } = req.params;
     var data = { guest: false };
@@ -189,8 +196,9 @@ var addOneProductToCart = async (req, res) => {
 };
 
 var modifyOneProductFromCart = async (req, res) => {
-    var userId = userIdFromHeaders(req);
-
+    var temp = userIdFromHeaders(req);
+    var userId = temp? temp.userId : undefined
+console.log(4);
     var { productId, quantity, priceWhenAdded } = req.body;
     if (!productId) {
         res.status(401).json({ message: "Must provide the product id" });
@@ -229,8 +237,11 @@ var modifyOneProductFromCart = async (req, res) => {
 };
 
 var removeOneProductFromCart = async (req, res) => {
-    var userId = userIdFromHeaders(req);
-
+    // console.log("why",userIdFromHeaders(req));
+    var userId = userIdFromBody(req);
+    // var userId = temp? temp.userId : undefined
+    // console.log("remove", userId);
+console.log(5,userId);
     var { productId } = req.params;
     try {
         var deleteNotification = await cartModel.updateOne(
@@ -244,7 +255,7 @@ var removeOneProductFromCart = async (req, res) => {
 };
 
 var deleteUserCart = async (req, res) => {
-    var userId = userIdFromBody(req);
+    var { userId } = userIdFromBody(req);
 
     try {
         var deleteNotification = await cartModel.deleteOne({ userId });
