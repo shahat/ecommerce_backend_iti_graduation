@@ -1,5 +1,14 @@
 const mongoose = require("mongoose");
 
+const orderProductSchema = mongoose.Schema({
+  productId: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "product",
+  }
+  
+})
+
+
 const ordersSchema = mongoose.Schema(
   {
     userId: {
@@ -13,14 +22,13 @@ const ordersSchema = mongoose.Schema(
     },
     status: {
       type: String,
+      default: "Waiting for Supplier",
       enum: ["shipped", "Waiting for Supplier"],
     },
     amount: {
       type: Number,
     },
-    items: {
-      type: [Object],
-    },
+    items: [orderProductSchema],
     shippingAddress: {
       type: Object,
     },

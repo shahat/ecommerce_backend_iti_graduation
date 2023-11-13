@@ -4,11 +4,11 @@ const  reviewsModel= require("../models/reviews")
 const getAllReviewsOfProductById = async (req,res)=>{   
     var id = req.params.id;
     try{
-        const allReviews = await reviewsModel.find({productId:id});
+        const allReviews = await reviewsModel.find({productId:id}).populate("productId")
         res.status(200).json({allReviews})
     }
     catch(err){
-        res.status(400).json(`error : ${err}`, {not:""})
+        res.status(400).json(`error : ${err}`, )
     }
 }
 

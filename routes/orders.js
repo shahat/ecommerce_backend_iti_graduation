@@ -9,7 +9,7 @@ var {
   deleteOrder,
 } = require("../controller/orders");
 
-router.get("/", getAllOrderOfOneUser);
+router.get("/userId/:id", getAllOrderOfOneUser);
 router.post("/", createOrder);
 router.patch("/:id", updatingOrders);
 router.get("/:id", getOneOrderById);
