@@ -36,7 +36,7 @@ const getOneUser = async (req, res) => {
   }
 };
 // update user => id
-const updateOneUser = async (req,auth, res) => {
+const updateOneUser = async (req, res,auth) => {
   let { id } = req.params;
   // let { username } = req.body;
   var updates = req.body;
@@ -45,9 +45,24 @@ const updateOneUser = async (req,auth, res) => {
     let todos = await usersModel.updateOne({ _id: id }, updates);
     const response = res.status(200).json({ message: "the todo is updated ", data: todos });
   } catch (err) {
-    res.status(500).json({ message: " Error in update the document" });
+    const response =  res.status(500).json({ message: ` Error in update the document : ${err}` });
   }
 };
+
+const updateOneUserAddress = async (req,auth,res)=>{
+  let { id } = req.params;
+  var updates = req.body;
+  console.log("a7a");
+
+  console.log(updates);
+  try {
+    let result = await usersModel.updateOne({ _id: id }, {addressBook : updates});
+    const response = res.status(200).json({ message: "the todo is updated ", data: todos });
+  } catch (err) {
+    const response =  res.status(500).json({ message: ` Error in update the document : ${err}` });
+  }
+}
+
 // Delete user => id
 const deleteOneUser = async (req,auth, res) => {
   let { id } = req.params;
@@ -64,5 +79,6 @@ module.exports = {
   getAllUsers,
   getOneUser,
   updateOneUser,
+  updateOneUserAddress,
   deleteOneUser,
 };

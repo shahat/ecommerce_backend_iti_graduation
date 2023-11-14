@@ -10,6 +10,7 @@ const {
   getAllUsers,
   getOneUser,
   updateOneUser,
+  updateOneUserAddress,
   deleteOneUser,
 } = require("../controller/user.js");
 
@@ -19,6 +20,8 @@ router.post("/", createUser);
 router.get("/:limit/:skip", getAllUsers);
 router.get("/:id", getOneUser);
 router.put("/:id", updateOneUser);
+router.put("/address/:id", updateOneUserAddress);
+
 router.delete("/:id", deleteOneUser);
 
 module.exports = router;

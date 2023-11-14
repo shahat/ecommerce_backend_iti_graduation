@@ -1,4 +1,5 @@
 const categoryModel = require("../models/category");
+const subCategoryModel = require("../models/subCategory");
 const asyncHandler = require("express-async-handler");
 
 // @desc   Get list of categories
@@ -6,10 +7,14 @@ const asyncHandler = require("express-async-handler");
 // @access Public
 const getCategories = asyncHandler(async (req, res) => {
   const page = req.query.page * 1 || 1;
-  const limit = req.query.limit * 1 || 5;
+  const limit = req.query.limit * 1 || 10;
   const skip = (page - 1) * limit;
   // (2-1)*5=5
-  const returnedCategory = await categoryModel.find({}).skip(skip).limit(limit);
+  const returnedCategory = await categoryModel
+    .find({})
+    .populate("name")
+    .skip(skip)
+    .limit(limit);
   res
     .status(200)
     .json({ result: returnedCategory.length, page, data: returnedCategory });
