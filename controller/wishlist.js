@@ -8,14 +8,14 @@ var userIdFromHeaders = (req) => {
         try {
             userId = jwt.decode(token).id;
         } catch (err) {
-            res.status(401).json({ message: "invalid token" });
+            console.log(err);
         }
     }
     return userId;
 };
 
 var getAllWishlistProducts = async (req, res) => {
-    var userId = userIdFromHeaders(req);
+    const userId = userIdFromHeaders(req);
 
     if (userId) {
         try {
@@ -36,7 +36,9 @@ var getAllWishlistProducts = async (req, res) => {
 };
 
 var addUserWishlist = async (req, res) => {
-    var userId = userIdFromHeaders(req);
+    let userId;
+    const { token2 } = req.headers;
+    token2 && (userId = JSON.parse(token2).userId)
 
     if (!userId) {
         res.status(404).json({ message: "Must signup first" });
@@ -59,9 +61,9 @@ var addUserWishlist = async (req, res) => {
 };
 
 var addOneProductToWishlist = async (req, res) => {
-    var userId = userIdFromHeaders(req);
+    const userId = userIdFromHeaders(req);
     var { productId } = req.body;
-    
+
     if (!userId) {
         res.status(404).json({ message: "Must signup first" });
     }
@@ -103,7 +105,7 @@ var addOneProductToWishlist = async (req, res) => {
 };
 
 var deleteOneProductFromWishlist = async (req, res) => {
-    var userId = userIdFromHeaders(req);
+    const userId = userIdFromHeaders(req);
     var { productId } = req.body;
 
     try {
@@ -118,8 +120,8 @@ var deleteOneProductFromWishlist = async (req, res) => {
 };
 
 var deleteUserWishlist = async (req, res) => {
-    var { userId } = req.params; 
-    
+    var { userId } = req.params;
+
     try {
         var deleteNotification = await wishlistModel.deleteOne({ userId });
         res.status(202).json({ data: deleteNotification });
