@@ -20,7 +20,10 @@ let query = {};
 const getProducts = async (req, res) => {
   try {
     let mongooseQuery = productModel.find(query);
-
+    console.log(
+      "product count ",
+      await productModel.find(query).countDocuments()
+    );
     // this funciton for retrive aall products length
     // async function getLengthOfProducts() {
     //   const products = await mongooseQuery.toArray();
@@ -44,7 +47,7 @@ const getProducts = async (req, res) => {
 
       ...filters
     } = req.query;
-    console.log("this is filters ", filters);
+    // console.log("this is filters ", filters);
     // Apply filters (excluding pagination, sorting, fields, and cd)
     for (const key in filters) {
       mongooseQuery = mongooseQuery.where(key, filters[key]);
