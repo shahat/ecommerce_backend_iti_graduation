@@ -23,24 +23,27 @@ const user = mongoose.Schema(
       minLength: 8,
       select: false,
     },
-    confirmPassword: {
-      type: String,
-      required: [true, "please confirm your password"],
-      validate: {
-        validator: function (val) {
-          return val == this.password;
-        },
-        message: "password & confirm password does not match!",
-      },
-    },
+    // confirmPassword: {
+    //   type: String,
+    //   required: [true, "please confirm your password"],
+    //   validate: {
+    //     validator: function (val) {
+    //       return val == this.password;
+    //     },
+    //     message: "password & confirm password does not match!",
+    //   },
+    // },
 
     role: {
       type: String,
       enum: ["user", "admin"],
       default: "user",
     },
+    passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetTokenExpires: Date,
+    passwordResetCode: Number,
+    passwordResetCodeExpires: Date,
   },
   { timestamps: true }
 );
@@ -54,25 +57,26 @@ user.pre("save", async function (next) {
   this.confirmPassword = undefined;
   next();
 });
-
-user.methods.createResetPasswordToken = function () {
-  // we're going to store the hashed token in the DB
-  // but we're going to send the plain token to the user which is "resetToken" below.
-
-  const resetToken = crypto.randomBytes(3).toString("hex");
-
-  this.passwordResetToken = crypto
-    .createHash("sha256")
-    .update(resetToken)
-    .digest("hex");
-  this.passwordResetTokenExpires = Date.now() + 10 * 60 * 1000;
-
-  console.log("resetToken", resetToken, this.passwordResetToken);
-
-  return resetToken;
-};
-
 module.exports = mongoose.model("users", user);
+
+// user.methods.createResetPasswordToken = function () {
+//   // we're going to store the hashed token in the DB
+//   // but we're going to send the plain token to the user which is "resetToken" below.
+
+//   const resetToken = crypto.randomBytes(3).toString("hex");
+
+//   this.passwordResetToken = crypto
+//     .createHash("sha256")
+//     .update(resetToken)
+//     .digest("hex");
+//   this.passwordResetTokenExpires = Date.now() + 10 * 60 * 1000;
+
+//   console.log("resetToken", resetToken, this.passwordResetToken);
+
+//   return resetToken;
+// };
+
+// module.exports = mongoose.model("users", user);
 
 // id
 // "medo123@gmail.com"

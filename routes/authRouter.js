@@ -5,6 +5,7 @@ const {
   signIn,
   logOut,
   forgotPassword,
+  // resetPassword,
 } = require("../controller/authController");
 
 router.post("/signup", signUp);
@@ -12,4 +13,6 @@ router.post("/signup/:id", signUp);
 router.post("/signin", signIn);
 router.get("/logout", logOut);
 router.post("/forgotPassword", forgotPassword);
+// router.patch("/resetPassword/:token", resetPassword);
+
 module.exports = router;
