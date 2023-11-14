@@ -3,50 +3,27 @@ const cartModel = require("../models/cart");
 const productModel = require("../models/product");
 const jwt = require("jsonwebtoken");
 
-var userIdFromBody = (req) => {
-    console.log(req);
-    var userId;
-    const { token, token2 } = req.body;
-    if (token) {
-        userId = jwt.decode(token).id;
-    } else if (token2) {
-        userId = token2.userId;
-    }
-    return userId;
-};
-var userIdFromParams = (req) => {
-    var userId;
-    const { token, token2 } = req.params;
-    if (token) {
-        userId = jwt.decode(token).id;
-    } else if (token2) {
-        userId = token2.userId;
-    }
-    return userId;
-};
 var userIdFromHeaders = (req) => {
-    var userId, cartId, res;
-    const { token } = req.headers;
+    var res;
+    const { token, token2 } = req.headers;
     if (token) {
         try {
             userId = jwt.decode(token).id;
-            // console.log("=>",userId);
-            res = { userId }
-            // console.log(res);
+            res = { userId };
         } catch (err) {
-            userId = JSON.parse(token).userId;
-            cartId = JSON.parse(token).cartId;
-            res = {userId, cartId}
+            console.log(err);
         }
+    } else if (token2) {
+        let { userId, cartId } = JSON.parse(token2);
+        res = { userId, cartId };
     }
-    // console.log("s",res);
     return res;
 };
 
 var getAllCartProducts = async (req, res) => {
     var temp = userIdFromHeaders(req);
-    var userId = temp? temp.userId : undefined
-// console.log(1);
+    var userId = temp ? temp.userId : undefined;
+    // console.log(1);
     if (userId) {
         try {
             var data = await cartModel
@@ -67,7 +44,7 @@ var getAllCartProducts = async (req, res) => {
 
 var addUserCart = async (req, res) => {
     var { userId, cartId } = userIdFromHeaders(req);
-console.log(2);
+    // console.log(2);
     if (!userId) res.status(401).json({ message: "Unknown User" });
 
     if (cartId) {
@@ -127,8 +104,8 @@ console.log(2);
 
 var addOneProductToCart = async (req, res) => {
     var temp = userIdFromHeaders(req);
-    var userId = temp? temp.userId : undefined
-console.log(3);
+    var userId = temp ? temp.userId : undefined;
+    // console.log(3);
     var { quantity } = req.body;
     var { productId } = req.params;
     var data = { guest: false };
@@ -197,8 +174,8 @@ console.log(3);
 
 var modifyOneProductFromCart = async (req, res) => {
     var temp = userIdFromHeaders(req);
-    var userId = temp? temp.userId : undefined
-console.log(4);
+    var userId = temp ? temp.userId : undefined;
+    // console.log(4);
     var { productId, quantity, priceWhenAdded } = req.body;
     if (!productId) {
         res.status(401).json({ message: "Must provide the product id" });
@@ -216,9 +193,12 @@ console.log(4);
                     if (!priceWhenAdded) {
                         priceWhenAdded = product.priceWhenAdded;
                     }
+                    console.log("for items");
                 }
             }
-        } catch (error) {}
+        } catch (error) {
+            console.log("findOne , 4", error);
+        }
     }
     try {
         var updateNotification = await cartModel.updateOne(
@@ -232,16 +212,15 @@ console.log(4);
         );
         res.status(202).json({ data: updateNotification });
     } catch (err) {
+        // console.log("err 4", err);
         res.status(401).json({ message: err.message });
     }
 };
 
 var removeOneProductFromCart = async (req, res) => {
-    // console.log("why",userIdFromHeaders(req));
-    var userId = userIdFromBody(req);
-    // var userId = temp? temp.userId : undefined
-    // console.log("remove", userId);
-console.log(5,userId);
+    var temp = userIdFromHeaders(req);
+    var userId = temp? temp.userId : undefined
+    // console.log(5);
     var { productId } = req.params;
     try {
         var deleteNotification = await cartModel.updateOne(
