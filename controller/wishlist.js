@@ -1,5 +1,6 @@
 const wishlistModel = require("../models/wishlist");
 const productModel = require("../models/product");
+const jwt = require("jsonwebtoken");
 
 var userIdFromHeaders = (req) => {
     var userId;
@@ -24,7 +25,7 @@ var getAllWishlistProducts = async (req, res) => {
                 .populate("items._id", "title description thumbnail");
             res.status(201).json({ data });
         } catch (err) {
-            res.status(403).json({
+            res.status(401).json({
                 message: err,
                 a_way_to_fix: "Signup first then send the userId",
             });

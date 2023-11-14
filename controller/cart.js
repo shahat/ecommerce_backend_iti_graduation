@@ -32,7 +32,7 @@ var getAllCartProducts = async (req, res) => {
                     "items._id",
                     "title quantity price discountPercentage priceAfterDescount description thumbnail "
                 );
-            res.status(200).json({ data });
+            res.status(201).json({ data });
         } catch (err) {
             res.status(404).json({ message: err });
         }
