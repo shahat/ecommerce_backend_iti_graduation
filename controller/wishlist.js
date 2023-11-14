@@ -44,7 +44,6 @@ var addUserWishlist = async (req, res) => {
     if (!userId) {
         res.status(404).json({ message: "Must signup first" });
     }
-    console.log("else place");
     try {
         var data = await wishlistModel.create({ userId, items: [] });
         res.status(201).json({ data });
@@ -63,10 +62,10 @@ var addUserWishlist = async (req, res) => {
 
 var addOneProductToWishlist = async (req, res) => {
     const userId = userIdFromHeaders(req);
-    var { productId } = req.body;
+    var { productId } = req.params;
 
     if (!userId) {
-        res.status(404).json({ message: "Must signup first" });
+        res.status(401).json({ message: "Must signup first" });
     }
     // adding the product to the users Wish List
     try {
@@ -74,7 +73,7 @@ var addOneProductToWishlist = async (req, res) => {
         var newItem = { _id: productId };
         if (!selectedProduct)
             // case user was missing with the product id
-            res.status(401).json({ message: "Wrong product ID" });
+            res.status(404).json({ message: "Couldn't find this product" });
 
         var check = await wishlistModel.findOne({
             userId,
@@ -88,9 +87,8 @@ var addOneProductToWishlist = async (req, res) => {
             if (updateNotification.modifiedCount != 0) {
                 // if the product has been added successfully just respond with the update notification
                 res.status(202).json({
-                    data: updateNotification,
+                    status: updateNotification,
                     userId,
-                    guest: data.guest,
                 });
             } else if (updateNotification.matchedCount === 0) {
                 res.status(404).json({
@@ -105,9 +103,9 @@ var addOneProductToWishlist = async (req, res) => {
     }
 };
 
-var deleteOneProductFromWishlist = async (req, res) => {
+var removeOneProductFromWishlist = async (req, res) => {
     const userId = userIdFromHeaders(req);
-    var { productId } = req.body;
+    var { productId } = req.params;
 
     try {
         var deleteNotification = await wishlistModel.updateOne(
@@ -121,13 +119,15 @@ var deleteOneProductFromWishlist = async (req, res) => {
 };
 
 var deleteUserWishlist = async (req, res) => {
-    var { userId } = req.params;
+    const userId = userIdFromHeaders(req);
 
-    try {
-        var deleteNotification = await wishlistModel.deleteOne({ userId });
-        res.status(202).json({ data: deleteNotification });
-    } catch (err) {
-        res.status(401).json({ message: err.message });
+    if(userId){
+        try {
+            var deleteNotification = await wishlistModel.deleteOne({ userId });
+            res.status(202).json({ data: deleteNotification });
+        } catch (err) {
+            res.status(401).json({ message: err.message });
+        }
     }
 };
 
@@ -135,6 +135,6 @@ module.exports = {
     getAllWishlistProducts,
     addUserWishlist,
     addOneProductToWishlist,
-    deleteOneProductFromWishlist,
+    removeOneProductFromWishlist,
     deleteUserWishlist,
 };
