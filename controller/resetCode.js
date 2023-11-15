@@ -20,7 +20,10 @@ const resetCode = async (req, res) => {
           // Code is valid, proceed to the next stage
           return res
             .status(200)
-            .json({ message: "Code is valid, proceed to reset password", userId: user._id });
+            .json({
+              message: "Code is valid, proceed to reset password",
+              userId: user._id,
+            });
         } else {
           // Code has expired, inform the user
           return res
