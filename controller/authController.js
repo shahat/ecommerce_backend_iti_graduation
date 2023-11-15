@@ -82,7 +82,7 @@ const signIn = async (req, res) => {
   console.log("this is the is valid", isValid);
 
   if (!isValid) {
-    res.status(401).json({ message: "Invalid email or password" });
+    return res.status(401).json({ message: "Invalid email or password" });
   }
 
   res.status(200).json({ token: generateToken(user._id) });
