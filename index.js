@@ -18,7 +18,6 @@ const connectDB = require("./config/db");
 const errorHandler = require("./middlewares/error");
 const nodemailer = require("nodemailer");
 const usersModel = require("./models/user");
-// const emailRecoveryRoute = require("./routes/emailRecovery");
 const emailRecoveryRoute = require("./routes/emailRecovery");
 const resetCodeRoute = require("./routes/resetCode");
 const resetPasswordRoute = require("./routes/resetPassword");
