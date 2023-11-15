@@ -116,7 +116,6 @@ user.pre("save", async function (next) {
 });
 
 user.pre("updateOne",async function(next){
-  console.log(this._update.password);
   var salt = await bcrypt.genSalt(10);
 
   if (!this._update.password) return next();

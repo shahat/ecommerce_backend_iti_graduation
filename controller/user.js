@@ -49,17 +49,18 @@ const updateOneUser = async (req, res,auth) => {
   }
 };
 
-const updateOneUserAddress = async (req,auth,res)=>{
+const updateOneUserAddress = async (req,res,auth)=>{
   let { id } = req.params;
   var updates = req.body;
-  console.log("a7a");
+  console.log(`id : ${id}`);
 
-  console.log(updates);
+  console.log(`updates : ${[...updates]}`);
   try {
     let result = await usersModel.updateOne({ _id: id }, {addressBook : updates});
-    const response = res.status(200).json({ message: "the todo is updated ", data: todos });
+    res.status(200).json({ message: "the todo is updated "});
   } catch (err) {
-    const response =  res.status(500).json({ message: ` Error in update the document : ${err}` });
+    console.log(err);
+    res.status(500).json({ message: ` Error in update the document : ${err}` });
   }
 }
 
