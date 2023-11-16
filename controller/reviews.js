@@ -1,6 +1,7 @@
 const express = require("express");
 const  reviewsModel= require("../models/reviews")
 
+// ======================== get all reviews ========================
 const getAllReviewsOfProductById = async (req,res)=>{   
     var id = req.params.id;
     try{
@@ -12,6 +13,7 @@ const getAllReviewsOfProductById = async (req,res)=>{
     }
 }
 
+// ======================== create review ========================
 const createReview = async (req,res)=>{
     var review =req.body;
     try{
@@ -23,6 +25,7 @@ const createReview = async (req,res)=>{
     }
 }
 
+// ======================== update review ========================
 const updatingReview = async (req,res)=>{
     var id = req.params.id;
     var updates = req.body;
@@ -35,6 +38,7 @@ const updatingReview = async (req,res)=>{
     }
 }
 
+// ======================== Delete review ========================
 const deleteReview = async (req,res)=>{
     var id = req.params.id;
     try{

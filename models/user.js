@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const validator = require("validator");
+const crypto = require("crypto");
 const user = mongoose.Schema(
   {
     name: {
@@ -11,7 +12,7 @@ const user = mongoose.Schema(
     },
     email: {
       type: String,
-      require: [true, "please enter your email "],
+      required: [true, "please enter your email "],
       unique: true,
       minLength: 8,
       validate: [validator.isEmail, "please enter valid email"],
@@ -20,23 +21,19 @@ const user = mongoose.Schema(
       type: String,
       required: [true, "please enter your Password"],
       minLength: 8,
-      // select: false,
+      select: false,
     },
-    confirmPassword: {
-      type: String,
-      require: [true, "please confirm your password"],
-      validate: {
-        validator: function (val) {
-          return val == this.password;
-        },
-        message: "password & return password does not match ",
-      },
-    },
+   
     role: {
       type: String,
       enum: ["user", "admin"],
       default: "user",
     },
+    passwordChangedAt: Date,
+    passwordResetToken: String,
+    passwordResetTokenExpires: Date,
+    passwordResetCode: Number,
+    passwordResetCodeExpires: Date,
   },
   { timestamps: true }
 );
@@ -48,57 +45,7 @@ user.pre("save", async function (next) {
   let hashedPass = await bcrypt.hash(this.password, salt);
   this.password = hashedPass;
   this.confirmPassword = undefined;
+  next();
 });
-
 module.exports = mongoose.model("users", user);
 
-// id
-// "medo123@gmail.com"
-
-// String
-// firstName
-// mohamed
-
-// String
-// secondName
-// elshahat
-
-// String
-// hashedPassword
-// sasjnghucbt45815348
-
-// String
-
-// shippingAddress
-// Object
-
-// Object
-
-// billingAddress
-// Object
-
-// Object
-// admin
-// false
-
-/*
-=======================
-users : 
-     "name":"ahmed adel",
-     "email":"medo987456@gmail.com",
-     "password":"medo987456",
-
-     -------------------
-
-        "name":"mohamed ahmed",
-     "email":"mohamedahmed123@gmail.com",
-     "password":"mohamedahmed123",
-     
--------------------
-"name":"ahmedadel",
-"email":"ahmedadel258@gmail.com",
-"password":"ahmedadel258",
-
-
-
-*/
