@@ -14,9 +14,13 @@ const categoryRoute = require("./routes/categoryRoute");
 const subCategoryRoute = require("./routes/subCategoryRoute");
 // schedule Function to delete old guest carts
 const deleteOldCarts = require("./helpers/schedule");
-
 const connectDB = require("./config/db");
 const errorHandler = require("./middlewares/error");
+// const nodemailer = require("nodemailer");
+// const usersModel = require("./models/user");
+const emailRecoveryRoute = require("./routes/emailRecovery");
+const resetCodeRoute = require("./routes/resetCode");
+const resetPasswordRoute = require("./routes/resetPassword");
 
 // Connect to DB
 connectDB();
@@ -40,6 +44,10 @@ app.use("/cart", cartRouter);
 app.use("/wish", wishRouter);
 app.use("/categories", categoryRoute);
 app.use("/subcategories", subCategoryRoute);
+app.use("/emailRecovery", emailRecoveryRoute);
+app.use("/resetCode", resetCodeRoute);
+app.use("/resetPassword", resetPasswordRoute);
+
 
 // handle not found not found middleware
 app.use("*", function (req, res, next) {
