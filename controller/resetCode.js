@@ -13,11 +13,12 @@ const resetCode = async (req, res) => {
 
       if (user) {
         const codeExpiresAt = user.passwordResetCodeExpires;
-        console.log("codeCreatedAt", codeExpiresAt);
+        // console.log("codeCreatedAt", codeExpiresAt);
         const currentTime = new Date();
-        console.log("currentTime", currentTime);
+        // console.log("currentTime", currentTime);
         const timeDifference = (codeExpiresAt - currentTime) / (1000 * 60);
-        console.log("timeDifference", timeDifference);
+        // console.log("timeDifference", timeDifference);
+           res.status(200).json({message:'Valid Code'})
 
         if (timeDifference >= 5) {
           // Code is valid, proceed to the next stage
