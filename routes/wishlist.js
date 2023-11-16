@@ -10,8 +10,8 @@ const {
 const router = express.Router();
 router.get("/", getAllWishlistProducts);
 router.post("/", addUserWishlist);
-router.patch("/:productId", addOneProductToWishlist);
-router.delete("/:productId", removeOneProductFromWishlist);
+router.post("/:productId", addOneProductToWishlist);
+router.patch("/:productId", removeOneProductFromWishlist);
 router.delete("/", deleteUserWishlist);
 
 module.exports = router;

@@ -17,7 +17,7 @@ var userIdFromHeaders = (req) => {
 
 var getAllWishlistProducts = async (req, res) => {
     const userId = userIdFromHeaders(req);
-
+    // console.log(1);
     if (userId) {
         try {
             var data = await wishlistModel
@@ -40,6 +40,7 @@ var addUserWishlist = async (req, res) => {
     let userId;
     const { token2 } = req.headers;
     token2 && (userId = JSON.parse(token2).userId)
+    // console.log(2);
 
     if (!userId) {
         res.status(404).json({ message: "Must signup first" });
@@ -63,6 +64,7 @@ var addUserWishlist = async (req, res) => {
 var addOneProductToWishlist = async (req, res) => {
     const userId = userIdFromHeaders(req);
     var { productId } = req.params;
+    // console.log(3);
 
     if (!userId) {
         res.status(401).json({ message: "Must signup first" });
@@ -104,8 +106,9 @@ var addOneProductToWishlist = async (req, res) => {
 };
 
 var removeOneProductFromWishlist = async (req, res) => {
-    const userId = userIdFromHeaders(req);
+    var userId = userIdFromHeaders(req);
     var { productId } = req.params;
+    // console.log(4);
 
     try {
         var deleteNotification = await wishlistModel.updateOne(
@@ -119,6 +122,7 @@ var removeOneProductFromWishlist = async (req, res) => {
 };
 
 var deleteUserWishlist = async (req, res) => {
+    // console.log(5);
     const userId = userIdFromHeaders(req);
 
     if(userId){
