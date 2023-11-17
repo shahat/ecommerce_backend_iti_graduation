@@ -233,10 +233,11 @@ var removeOneProductFromCart = async (req, res) => {
 };
 
 var deleteUserCart = async (req, res) => {
-    var { userId } = userIdFromBody(req);
+    var  userId  = req.params.id;
 
   try {
-    var deleteNotification = await cartModel.deleteOne({ userId });
+    
+    var deleteNotification = await cartModel.updateOne({ userId : userId } , {items : []});
     res.status(202).json({ data: deleteNotification });
   } catch (err) {
     res.status(401).json({ message: err.message });

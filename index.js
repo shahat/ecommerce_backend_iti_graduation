@@ -12,6 +12,9 @@ const cartRouter = require("./routes/cart");
 const wishRouter = require("./routes/wishlist");
 const categoryRoute = require("./routes/categoryRoute");
 const subCategoryRoute = require("./routes/subCategoryRoute");
+
+const coupon = require("./routes/coupon");
+
 // schedule Function to delete old guest carts
 const deleteOldCarts = require("./helpers/schedule");
 
@@ -40,6 +43,7 @@ app.use("/cart", cartRouter);
 app.use("/wish", wishRouter);
 app.use("/categories", categoryRoute);
 app.use("/subcategories", subCategoryRoute);
+app.use("/coupon", coupon);
 
 // handle not found not found middleware
 app.use("*", function (req, res, next) {

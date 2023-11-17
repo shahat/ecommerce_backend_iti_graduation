@@ -2,14 +2,16 @@ const express = require("express");
 var router = express.Router();
 
 var {
-  getAllOrderOfOneUser,
+  getPastOrderOfOneUser,getComingOrderOfOneUser,
   getOneOrderById,
   createOrder,
   updatingOrders,
   deleteOrder,
 } = require("../controller/orders");
 
-router.get("/userId/:id", getAllOrderOfOneUser);
+router.get("/past/:id", getPastOrderOfOneUser);
+router.get("/coming/:id", getComingOrderOfOneUser);
+
 router.post("/", createOrder);
 router.patch("/:id", updatingOrders);
 router.get("/:id", getOneOrderById);

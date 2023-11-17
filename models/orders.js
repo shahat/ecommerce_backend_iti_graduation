@@ -17,8 +17,8 @@ const ordersSchema = mongoose.Schema(
     },
     paymentStatus: {
       type: String,
-      default: "processed",
-      enum: ["processed", "in progress", "completed"],
+      default: "Cash on delivery",
+      enum: ["Cash on delivery", "Paid Online", "Completed" , "Refunded"],
     },
     status: {
       type: String,

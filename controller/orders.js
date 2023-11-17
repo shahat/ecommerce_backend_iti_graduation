@@ -1,15 +1,25 @@
 const express = require("express");
 const ordersModel = require("../models/orders");
 
-const getAllOrderOfOneUser = async (req, res) => {
+const getComingOrderOfOneUser = async (req, res) => {
   var userId = req.params.id
   try {
-    const allOrders = await ordersModel.find({userId : userId});
+    const allOrders = await ordersModel.find({userId : userId , status : "Waiting for Supplier"});
     res.status(200).json({ allOrders });
   } catch (err) {
     res.status(400).json({error:`error : ${err}`, why:"Be"});
   }
 };
+
+const getPastOrderOfOneUser = async (req ,res) =>{
+  var userId = req.params.id
+  try {
+    const allOrders = await ordersModel.find({userId : userId , status : "shipped"});
+    res.status(200).json({ allOrders });
+  } catch (err) {
+    res.status(400).json({error:`error : ${err}`, why:"Be"});
+  }
+}
 
 const getOneOrderById = async (req, res) => {
   var id = req.params.id;
@@ -54,9 +64,10 @@ const deleteOrder = async (req, res) => {
 };
 
 module.exports = {
-  getAllOrderOfOneUser,
+  getPastOrderOfOneUser,
   getOneOrderById,
   createOrder,
   updatingOrders,
   deleteOrder,
+  getComingOrderOfOneUser
 };
