@@ -232,17 +232,15 @@ var removeOneProductFromCart = async (req, res) => {
 };
 
 var deleteUserCart = async (req, res) => {
-    var temp = userIdFromHeaders(req);
-    var userId = temp ? temp.userId : undefined;
+    var  userId  = req.params.id;
+
+  try {
     
-    if (userId){
-        try {
-            var deleteNotification = await cartModel.deleteOne({ userId });
-            res.status(202).json({ data: deleteNotification });
-        } catch (err) {
-            res.status(401).json({ message: err.message });
-        }
-    }
+    var deleteNotification = await cartModel.updateOne({ userId : userId } , {items : []});
+    res.status(202).json({ data: deleteNotification });
+  } catch (err) {
+    res.status(401).json({ message: err.message });
+  }
 };
 
 module.exports = {
