@@ -23,7 +23,7 @@ const user = mongoose.Schema(
       minLength: 8,
       select: false,
     },
-   
+
     role: {
       type: String,
       enum: ["user", "admin"],
@@ -48,4 +48,3 @@ user.pre("save", async function (next) {
   next();
 });
 module.exports = mongoose.model("users", user);
-

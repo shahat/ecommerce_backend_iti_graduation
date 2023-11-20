@@ -13,19 +13,39 @@ function generateToken(id) {
 /* =========================== signUp =========================== */
 
 const signUp = async (req, res) => {
-  const { email } = req.body;
+  const { email, name, password, confirmPassword } = req.body;
 
   const userId = req.param.id;
 
-  if (!email) {
-    return res.status(400).json({ message: "please provide your user email " });
+  if (!name) {
+    console.log("Name is provided", name);
+    return res.status(400).json({ message: "Please provide a name." });
   }
+
+  if (!email) {
+    console.log("email is not provided", email);
+    return res.status(400).json({ message: "Sorry, email cannot be empty." });
+  }
+
+  if (password !== confirmPassword) {
+    return res
+      .status(401)
+      .json({ message: "Sorry, password and confirm password do not match" });
+  }
+
+  const userName = await usersModel.findOne({ name });
+  if (userName) {
+    return res
+      .status(400)
+      .json({ message: "Please enter a different user name" });
+  }
+
   const user = await usersModel.findOne({ email });
   try {
     if (user)
       return res
         .status(404)
-        .json({ message: " You have an accout please signIn " });
+        .json({ message: " You have an account please sign in " });
     if (userId) {
       req.body._id = userId;
     }
@@ -42,57 +62,9 @@ const signUp = async (req, res) => {
   }
 };
 
-// // =========================== signIn ===========================
-
-// const signIn = async (req, res) => {
-//   console.log("sign in func()");
-//   const { email, password } = req.body;
-//   console.log(email, password);
-
-//   if (!email || !password) {
-//     console.log("inside if ");
-//     return res
-//       .status(400)
-//       .json({ message: "please provide your user name and password" });
-//   }
-
-//   // Check the user is existed
-//   const user = await usersModel.findOne({ email });
-
-//   // Ensure the user object is fully populated before accessing the password
-//   await Promise.all([user]);
-
-//   if (!user) {
-//     return res
-//       .status(404)
-//       .json({ message: "Not existed user please register" });
-//   }
-
-//   console.log("this is current user", user);
-
-//   // Verify that the password field is not null or undefined
-//   if (!user.password) {
-//     console.log("password error from server ");
-//     return res
-//       .status(500)
-//       .json({ message: "Internal server error, password missing" });
-//   }
-
-//   // Wait for the password comparison to complete
-//   let isValid = await bcrypt.compare(password, user.password);
-//   console.log("this is the is valid", isValid);
-
-//   if (!isValid) {
-//     return res.status(401).json({ message: "Invalid email or password" });
-//   }
-//   console.log("isValid", isValid);
-//   return res.status(200).json({ token: generateToken(user._id) });
-// };
-
 const signIn = async (req, res) => {
   console.log("request is RECEIVED from signin funtcion ");
   const { email, password } = req.body;
- 
 
   // Check if email & password are present in the request body
   if (!email || !password) {

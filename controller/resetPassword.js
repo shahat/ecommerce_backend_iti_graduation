@@ -2,7 +2,7 @@ const usersModel = require("../models/user");
 const bcrypt = require("bcryptjs");
 
 const resetPassword = async (req, res) => {
-  const passwordRegx = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/;
+  const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/;
 
   const { userPassword, enteredCode } = req.body;
   const { password, confirmPassword } = userPassword;
@@ -14,8 +14,8 @@ const resetPassword = async (req, res) => {
       .status(400)
       .json({ message: "Password and confirm password are required" });
   }
-  if (!passwordRegx.test(password) || !passwordRegx.test(confirmPassword)) {
-    return res.status(404).json({
+  if (!passwordRegex.test(password) || !passwordRegex.test(confirmPassword)) {
+    return res.status(400).json({
       message:
         "Password Should be at Least 8 Characters, One Lower Case Letter, One Uppercase Letter, Special Character",
     });
@@ -27,7 +27,9 @@ const resetPassword = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
     if (password !== confirmPassword) {
-      return res.status(400).json({ message: "Passwords do not match" });
+      return res
+        .status(400)
+        .json({ message: "Password and confirm password do not match" });
     }
     console.log("passBeforeHash", password);
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -37,7 +39,6 @@ const resetPassword = async (req, res) => {
       {
         $set: {
           password: hashedPassword,
-          // confirmPassword: hashedPassword, // Make sure this is necessary for your use case
           passwordResetCode: undefined,
           passwordResetCodeExpires: undefined,
         },
@@ -50,8 +51,6 @@ const resetPassword = async (req, res) => {
     if (!updatedUser) {
       return res.status(404).json({ message: "User not found" });
     }
-
-    console.log("passAfterHash", hashedPassword);
 
     res.status(200).json({ message: "Password has been reset successfully" });
   } catch (error) {

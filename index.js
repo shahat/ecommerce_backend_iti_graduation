@@ -48,7 +48,6 @@ app.use("/emailRecovery", emailRecoveryRoute);
 app.use("/resetCode", resetCodeRoute);
 app.use("/resetPassword", resetPasswordRoute);
 
-
 // handle not found not found middleware
 app.use("*", function (req, res, next) {
   res.status(404).json({ message: "notfound" });
