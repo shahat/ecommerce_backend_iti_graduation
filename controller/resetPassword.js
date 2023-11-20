@@ -37,10 +37,9 @@ const resetPassword = async (req, res) => {
     const updatedUser = await usersModel.findOneAndUpdate(
       { passwordResetCode: enteredCode },
       {
-        $set: {
-          password: hashedPassword,
-          passwordResetCode: undefined,
-          passwordResetCodeExpires: undefined,
+        $unset: {
+          passwordResetCode: "",
+          passwordResetCodeExpires: "",
         },
       },
       { new: true }
