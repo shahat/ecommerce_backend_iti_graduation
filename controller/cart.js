@@ -32,9 +32,9 @@ var getAllCartProducts = async (req, res) => {
                     "items._id",
                     "title quantity price discountPercentage priceAfterDescount description thumbnail "
                 );
-            res.status(200).json({ data });
+            res.status(201).json({ data });
         } catch (err) {
-            res.status(404).json({ message: err });
+            res.status(401).json({ message: err });
         }
     } else {
         // case a guest tries to get his empty cart before signing up or adding any products
@@ -47,58 +47,59 @@ var addUserCart = async (req, res) => {
     // console.log(2);
     if (!userId) res.status(401).json({ message: "Unknown User" });
 
-  if (cartId) {
-    // transferring the guest cart to the registered user
-    try {
-      var data = await cartModel.updateOne(
-        { _id: cartId },
-        { userId, guest: false }
-      );
-      res.status(201).json({ data });
-    } catch (err) {
-      res.status(403).json({ message: err.message });
-    }
-  } else {
-    try {
-      var data = await cartModel.create({ userId, items: [] });
-      res.status(201).json({ data });
-    } catch (err) {
-      if (err.message.includes("duplicate key")) {
-        // ERROR Handler: case if it accidentally created a userId that is used for a guest:=>
-        // delete it and create a new one for the user
-        if (Object.keys(err.keyValue).includes("userId")) {
-          // Get the Duplicated cart
-          var check = await cartModel.findOne({ userId });
-          // check if it is for another guest to replace it
-          if (check.guest) {
-            // case a guest signed up change it to not guest
-            try {
-              var data = await cartModel.replaceOne(
-                { userId },
-                { userId, items: [] }
-              );
-              res.status(201).json({
-                data,
-                To_Whom_It_May_Concern: "I just replaced a guest cart",
-              });
-            } catch (err) {
-              res.status(403).json({ message: err.message });
-            }
-          } else {
-            res.status(403).json({ message: err });
-          }
-        } else {
-          // send a message about the Duplicated key
-          let message = {
-            cause: `Duplicate ${Object.keys(err.keyValue)[0]}`,
-          };
-          res.status(403).json({ message });
+    if (cartId) {
+        // transferring the guest cart to the registered user
+        try {
+            var data = await cartModel.updateOne(
+                { _id: cartId },
+                { userId, guest: false }
+            );
+            res.status(201).json({ data });
+        } catch (err) {
+            res.status(403).json({ message: err.message });
         }
-      } else {
-        res.status(400).json({ message: err });
-      }
+    } else {
+        try {
+            var data = await cartModel.create({ userId, items: [] });
+            res.status(201).json({ data });
+        } catch (err) {
+            if (err.message.includes("duplicate key")) {
+                // ERROR Handler: case if it accidentally created a userId that is used for a guest:=>
+                // delete it and create a new one for the user
+                if (Object.keys(err.keyValue).includes("userId")) {
+                    // Get the Duplicated cart
+                    var check = await cartModel.findOne({ userId });
+                    // check if it is for another guest to replace it
+                    if (check.guest) {
+                        // case a guest signed up change it to not guest
+                        try {
+                            var data = await cartModel.replaceOne(
+                                { userId },
+                                { userId, items: [] }
+                            );
+                            res.status(201).json({
+                                data,
+                                To_Whom_It_May_Concern:
+                                    "I just replaced a guest cart",
+                            });
+                        } catch (err) {
+                            res.status(403).json({ message: err.message });
+                        }
+                    } else {
+                        res.status(403).json({ message: err });
+                    }
+                } else {
+                    // send a message about the Duplicated key
+                    let message = {
+                        cause: `Duplicate ${Object.keys(err.keyValue)[0]}`,
+                    };
+                    res.status(403).json({ message });
+                }
+            } else {
+                res.status(400).json({ message: err });
+            }
+        }
     }
-  }
 };
 
 var addOneProductToCart = async (req, res) => {
@@ -146,9 +147,7 @@ var addOneProductToCart = async (req, res) => {
             if (updateNotification.modifiedCount != 0) {
                 // if the product has been added successfully just respond with the update notification
                 res.status(202).json({
-                    data: updateNotification,
-                    // userId,
-                    // guest: data.guest,
+                    status: updateNotification,
                     data,
                 });
             } else if (updateNotification.matchedCount === 0) {
@@ -218,7 +217,7 @@ var modifyOneProductFromCart = async (req, res) => {
 
 var removeOneProductFromCart = async (req, res) => {
     var temp = userIdFromHeaders(req);
-    var userId = temp? temp.userId : undefined
+    var userId = temp ? temp.userId : undefined;
     // console.log(5);
     var { productId } = req.params;
     try {
@@ -233,10 +232,11 @@ var removeOneProductFromCart = async (req, res) => {
 };
 
 var deleteUserCart = async (req, res) => {
-    var { userId } = userIdFromBody(req);
+    var  userId  = req.params.id;
 
   try {
-    var deleteNotification = await cartModel.deleteOne({ userId });
+    
+    var deleteNotification = await cartModel.updateOne({ userId : userId } , {items : []});
     res.status(202).json({ data: deleteNotification });
   } catch (err) {
     res.status(401).json({ message: err.message });
@@ -244,10 +244,10 @@ var deleteUserCart = async (req, res) => {
 };
 
 module.exports = {
-  getAllCartProducts,
-  addOneProductToCart,
-  modifyOneProductFromCart,
-  removeOneProductFromCart,
-  addUserCart,
-  deleteUserCart,
+    getAllCartProducts,
+    addOneProductToCart,
+    modifyOneProductFromCart,
+    removeOneProductFromCart,
+    addUserCart,
+    deleteUserCart,
 };

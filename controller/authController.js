@@ -13,8 +13,9 @@ function generateToken(id) {
 /* =========================== signUp =========================== */
 
 const signUp = async (req, res) => {
-  const { email, name, password, confirmPassword } = req.body;
-
+  console.log("inside the sign up ");
+  const { email } = req.body;
+  console.log("req.body", req.body);
   const userId = req.param.id;
 
   if (!name) {
@@ -52,15 +53,18 @@ const signUp = async (req, res) => {
     const newUser = await usersModel.create(req.body);
     const token = generateToken(newUser._id);
     res.cookie("authenticate", token);
-    res.status(201).json({
+    console.log("token", token);
+    return res.status(201).json({
       token: token,
       message: " user is saved is saved ",
       data: { user: newUser },
     });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    return res.status(400).json({ message: error.message });
   }
 };
+
+// // =========================== signIn ===========================
 
 const signIn = async (req, res) => {
   console.log("request is RECEIVED from signin funtcion ");

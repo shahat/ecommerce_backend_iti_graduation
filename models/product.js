@@ -9,7 +9,20 @@ const productSchema = mongoose.Schema(
       minLength: [3, "short product title"],
       maxLength: [80, "long product title"],
     },
+    title_ar: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      minLength: [3, "short product title"],
+      maxLength: [80, "long product title"],
+    },
     description: {
+      type: String,
+      required: true,
+      minLength: [20, "short product description"],
+    },
+    description_ar: {
       type: String,
       required: true,
       minLength: [20, "short product description"],
