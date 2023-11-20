@@ -39,7 +39,6 @@ const signUp = async (req, res) => {
       message: " user is saved is saved ",
       data: { user: newUser },
     });
-
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
