@@ -20,10 +20,6 @@ let query = {};
 const getProducts = async (req, res) => {
   try {
     let mongooseQuery = productModel.find(query);
-    console.log(
-      "product count ",
-      await productModel.find(query).countDocuments()
-    );
     // this funciton for retrive aall products length
     // async function getLengthOfProducts() {
     //   const products = await mongooseQuery.toArray();
