@@ -2,19 +2,27 @@ const categoryModel = require("../models/category");
 const subCategoryModel = require("../models/subCategory");
 const asyncHandler = require("express-async-handler");
 
+const getLang = (lang) => {
+  const nameField = lng === "ar" ? "name_ar" : "name";
+  return `${nameField} image`;
+};
+
 // @desc   Get list of categories
 // @route  GET /categories
 // @access Public
 const getCategories = asyncHandler(async (req, res) => {
+  const { lng } = req.query;
+  let nameField = lng == "ar" ? "name_ar name" : "name";
   const page = req.query.page * 1 || 1;
   const limit = req.query.limit * 1 || 10;
   const skip = (page - 1) * limit;
-  // (2-1)*5=5
   const returnedCategory = await categoryModel
     .find({})
+    .select(`${nameField}  image`) // Specify the fields to be selected
     .populate("name")
     .skip(skip)
     .limit(limit);
+
   res
     .status(200)
     .json({ result: returnedCategory.length, page, data: returnedCategory });

@@ -52,7 +52,6 @@ app.use("/emailRecovery", emailRecoveryRoute);
 app.use("/resetCode", resetCodeRoute);
 app.use("/resetPassword", resetPasswordRoute);
 
-
 // handle not found not found middleware
 app.use("*", function (req, res, next) {
   res.status(404).json({ message: "notfound" });
@@ -69,8 +68,3 @@ app.use(errorHandler);
 const server = app.listen(port, () =>
   console.log(`Server started listening on ${port}`)
 );
-
-// process.on("unhandledRejection", (error, promise) => {
-//   console.log(`Logged Error: ${error}`);
-//   server.close(() => process.exit(1));
-// });

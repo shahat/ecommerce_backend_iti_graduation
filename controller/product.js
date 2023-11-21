@@ -40,8 +40,10 @@ const getProducts = async (req, res) => {
 
       ...filters
     } = req.query;
+
     // handle localization
-    console.log("currentLanguageCode", lng);
+    // console.log("currentLanguageCode", lng);
+
     const titleField = lng === "ar" ? "title_ar" : "title";
     const descriptionField = lng === "ar" ? "description_ar" : "description";
     mongooseQuery = mongooseQuery.select(
