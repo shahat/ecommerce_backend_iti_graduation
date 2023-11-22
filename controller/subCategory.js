@@ -7,6 +7,7 @@ const setCategoryIdToBody = (req, res, next) => {
   next();
 };
 
+// =====================< createSubCategory >=====================<
 // @desc   Create subCategory
 // @route  POST /subcategories
 // @access Private
@@ -25,22 +26,29 @@ const createSubCategory = asyncHandler(async (req, res) => {
   });
 });
 
+// =====================< getSubCategories >=====================<
 // @route  GET /categories/:categoryId/subcategories
 // @desc   Get list of subCategories
 // @route  GET /subcategories
 // @access Public
+
 const getSubCategories = asyncHandler(async (req, res) => {
+  const { lng } = req.query;
+  let nameField = lng == "ar" ? " name name_ar" : "name";
+  console.log("lng from subcategory ", lng);
   const page = req.query.page * 1 || 1;
   const limit = req.query.limit * 1 || 20;
   const skip = (page - 1) * limit;
-  // (2-1)*5=5
+
   let filterObject = {};
   if (req.params.categoryId) filterObject = { category: req.params.categoryId };
+
   const returnedSubCategory = await subCategoryModel
     .find(filterObject)
+    .select(`${nameField} image parentCategory`)
     .skip(skip)
     .limit(limit);
-  // .populate({ path: "parentCategory", select: "name" });
+
   res.status(200).json({
     result: returnedSubCategory.length,
     page,
@@ -48,12 +56,13 @@ const getSubCategories = asyncHandler(async (req, res) => {
   });
 });
 
+// =====================< subcategoryProducts >=====================<
+
 const subcategoryProducts = async (req, res) => {
   const subcategory = req.params.id;
   const page = req.query.page * 1 || 1;
   const limit = req.query.limit * 1 || 3;
   const skip = (page - 1) * limit;
-
   const subcategoryProduct = await productModel
     .find({ subcategory: subcategory })
     .skip(skip)
@@ -65,9 +74,12 @@ const subcategoryProducts = async (req, res) => {
   });
 };
 
+// =====================< getSubCategories >=====================<
+
 // @desc    Get specific subCategory by ID
 // @route   GET /subcategories/:id
 // @access  Public
+
 const getSubCategoryById = asyncHandler(async (req, res) => {
   try {
     const { id } = req.params;
@@ -85,11 +97,12 @@ const getSubCategoryById = asyncHandler(async (req, res) => {
   }
 });
 
+// =====================< updateSubCategory >=====================<
 // @desc   update specific subCategory
 // @route  PATCH /subcategories/:id
 // @access Private
-
 // new:true -> to return the updated category, NOT before the update.
+
 const updateSubCategory = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { name, category } = req.body;
@@ -106,9 +119,11 @@ const updateSubCategory = asyncHandler(async (req, res) => {
     : res.status(404).json({ message: `No category for this id ${id}` });
 });
 
+// =====================< deleteSubCategory >=====================<
 // @desc   Delete specific subCategory
 // @route  DELETE /subcategories/:id
 // @access Private
+
 const deleteSubCategory = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const deletedSubCategory = await subCategoryModel.findByIdAndDelete({

@@ -1,17 +1,19 @@
 const express = require("express");
 const  reviewsModel= require("../models/reviews")
 
+// ======================== get all reviews ========================
 const getAllReviewsOfProductById = async (req,res)=>{   
     var id = req.params.id;
     try{
-        const allReviews = await reviewsModel.find({productId:id});
+        const allReviews = await reviewsModel.find({productId:id}).populate("productId")
         res.status(200).json({allReviews})
     }
     catch(err){
-        res.status(400).json(`error : ${err}`, {not:""})
+        res.status(400).json(`error : ${err}`, )
     }
 }
 
+// ======================== create review ========================
 const createReview = async (req,res)=>{
     var review =req.body;
     try{
@@ -23,6 +25,7 @@ const createReview = async (req,res)=>{
     }
 }
 
+// ======================== update review ========================
 const updatingReview = async (req,res)=>{
     var id = req.params.id;
     var updates = req.body;
@@ -35,6 +38,7 @@ const updatingReview = async (req,res)=>{
     }
 }
 
+// ======================== Delete review ========================
 const deleteReview = async (req,res)=>{
     var id = req.params.id;
     try{

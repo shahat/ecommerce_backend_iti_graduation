@@ -19,6 +19,7 @@ var saveProduct = async (req, res) => {
 let query = {};
 const getProducts = async (req, res) => {
   try {
+    // filter
     let mongooseQuery = productModel.find(query);
     // this funciton for retrive aall products length
     // async function getLengthOfProducts() {
@@ -29,6 +30,10 @@ const getProducts = async (req, res) => {
 
     // const length = await getLengthOfProducts();
     // conosle.log("length", length);
+    console.log(
+      "product count ",
+      await productModel.find(query).countDocuments()
+    );
 
     // Filtering and excluding query parameters
     const {
@@ -40,11 +45,20 @@ const getProducts = async (req, res) => {
       priceMin,
       priceMax,
       color,
+      lng,
 
       ...filters
     } = req.query;
-    // console.log("this is filters ", filters);
-    // Apply filters (excluding pagination, sorting, fields, and cd)
+
+    // handle localization
+    // console.log("currentLanguageCode", lng);
+
+    const titleField = lng === "ar" ? "title_ar" : "title";
+    const descriptionField = lng === "ar" ? "description_ar" : "description";
+    mongooseQuery = mongooseQuery.select(
+      `${titleField} ${descriptionField} price priceAfterDescount images`
+    );
+
     for (const key in filters) {
       mongooseQuery = mongooseQuery.where(key, filters[key]);
     }
@@ -79,12 +93,14 @@ const getProducts = async (req, res) => {
       mongooseQuery = mongooseQuery.where("colors").in(colorsArray);
     }
 
-    // Search
+    // Search & localizaion
     if (keyword) {
       const keywordRegex = new RegExp(keyword, "i"); // Case-insensitive search
       mongooseQuery = mongooseQuery.or([
+        { title_ar: keywordRegex },
         { title: keywordRegex },
         { description: keywordRegex },
+        { description_ar: keywordRegex },
       ]);
     }
 

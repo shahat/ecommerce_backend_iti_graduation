@@ -22,9 +22,16 @@ const mongoose = require("mongoose");
 const categorySchema = mongoose.Schema(
   {
     _id: {
-      type: String, // Set the _id field as a String
+      type: String, 
     },
     name: {
+      type: String,
+      required: true,
+      unique: true,
+      minLength: [2, "too short category name"],
+      maxLength: [32, "too long category name"],
+    },
+    name_ar: {
       type: String,
       required: true,
       unique: true,
@@ -34,12 +41,6 @@ const categorySchema = mongoose.Schema(
     image: {
       type: String,
     },
-    // subcategories: [
-    //   {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "subcategory", // Reference to the Subcategory model
-    //   },
-    // ],
   },
   { timestamps: true }
 );

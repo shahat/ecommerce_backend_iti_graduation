@@ -1,27 +1,3 @@
-// const mongoose = require("mongoose");
-
-// const subCategorySchema = mongoose.Schema(
-//   {
-//     name: {
-//       type: String,
-//       required: true,
-//       unique: true,
-//       minLength: [2, "too short subcategory name"],
-//       maxLength: [32, "too long subcategory name"],
-//     },
-//     category: {
-//       type: mongoose.Schema.Types.ObjectId,
-//       ref: "category",
-//       required: [true, " please enter the category "],
-//     },
-//     img: {
-//       type: String,
-//     },
-//   },
-//   { timestamps: true }
-// );
-// module.exports = mongoose.model("subCategory", subCategorySchema);
-
 const mongoose = require("mongoose");
 
 const subcategorySchema = mongoose.Schema(
@@ -30,6 +6,13 @@ const subcategorySchema = mongoose.Schema(
       type: String, // Set the _id field as a String
     },
     name: {
+      type: String,
+      required: true,
+      unique: true,
+      minLength: [2, "too short subcategory name"],
+      maxLength: [32, "too long subcategory name"],
+    },
+    name_ar: {
       type: String,
       required: true,
       unique: true,
