@@ -84,6 +84,14 @@ const productSchema = mongoose.Schema(
         color: [String],
       },
     ],
+    boughtUnits: {
+      type: Number,
+      default: 0,
+    },
+    totalSellingPrice: {
+      type: Number,
+      default: 0,
+    }
   },
   { timestamps: true }
 );

@@ -4,6 +4,7 @@ var productController = require(`../controller/product`);
 // const { protect } = require("../controller/authController");
 
 router.get(`/`, productController.getProducts);
+router.get(`/perMonth`, productController.productsCreatedPerMonth);
 router.post(`/`, productController.saveProduct);
 router.get("/:id", productController.getProductById);
 router.patch("/:id", productController.updateProduct);
