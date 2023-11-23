@@ -12,6 +12,7 @@ const cartRouter = require("./routes/cart");
 const wishRouter = require("./routes/wishlist");
 const categoryRoute = require("./routes/categoryRoute");
 const subCategoryRoute = require("./routes/subCategoryRoute");
+const stripe = require("./routes/stripe");
 
 const coupon = require("./routes/coupon");
 
@@ -51,6 +52,7 @@ app.use("/coupon", coupon);
 app.use("/emailRecovery", emailRecoveryRoute);
 app.use("/resetCode", resetCodeRoute);
 app.use("/resetPassword", resetPasswordRoute);
+app.use("/stripe", stripe);
 
 // handle not found not found middleware
 app.use("*", function (req, res, next) {
