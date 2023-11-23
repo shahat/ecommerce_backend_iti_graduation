@@ -23,7 +23,7 @@ const getAllUsers = async (req,auth, res) => {
     res.status(200).json(users);
   } catch (err) {
     res.status(500).json({ message: "something Went rong " });
-  }
+  } 
 };
 // Get user  =>   id
 const getOneUser = async (req, res) => {

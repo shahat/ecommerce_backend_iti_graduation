@@ -14,7 +14,6 @@ function generateToken(id) {
 
 const signUp = async (req, res) => {
   const { email } = req.body;
-
   const userId = req.param.id;
 
   if (!email) {
@@ -29,6 +28,7 @@ const signUp = async (req, res) => {
     if (userId) {
       req.body._id = userId;
     }
+    
     const newUser = await usersModel.create(req.body);
     const token = generateToken(newUser._id);
     res.cookie("authenticate", token);
