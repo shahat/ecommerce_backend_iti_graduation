@@ -45,7 +45,7 @@ const resetPassword = async (req, res) => {
       { new: true }
     );
     console.log("UPDATED USER", updatedUser);
-    //  console.log('ENTERED CODE',enteredCode)
+  
 
     if (!updatedUser) {
       return res.status(404).json({ message: "User not found" });
