@@ -5,7 +5,7 @@ const {
   modifyOneProductFromCart,
   removeOneProductFromCart,
   addUserCart,
-  deleteUserCart
+  deleteUserCart,
 } = require("../controller/cart");
 
 const router = express.Router();
@@ -14,7 +14,7 @@ router.get("/", getAllCartProducts);
 // user and guest user
 router.post("/", addUserCart);
 // user and guest user
-router.post("/:productId",addOneProductToCart);
+router.post("/:productId", addOneProductToCart);
 // user and guest user
 router.patch("/", modifyOneProductFromCart);
 // user and guest user

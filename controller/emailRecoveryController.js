@@ -14,16 +14,15 @@ const emailRecovery = async (req, res) => {
     }
 
     const resetCode = Math.floor(1000 + Math.random() * 9000);
-    console.log("found user before setting in the DB", foundUser);
 
     foundUser.passwordResetCode = resetCode;
-    // console.log(foundUser, "after adding resetCodePass");
 
     foundUser.passwordResetCodeExpires = new Date(Date.now() + 5 * 60 * 1000);
     await foundUser.save({ validateBeforeSave: false });
 
     console.log("resetCode before sending email", resetCode);
     await sendEmail(foundUser.email, resetCode);
+    console.log("liveDB", foundUser);
 
     res.status(200).json({
       resetCode,

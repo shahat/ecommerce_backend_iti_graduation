@@ -87,7 +87,7 @@ const user = mongoose.Schema(
       minLength: 8,
       select: false,
     },
-   
+
     role: {
       type: String,
       enum: ["user", "admin"],
@@ -126,4 +126,3 @@ user.pre("updateOne",async function(next){
 
 
 module.exports = mongoose.model("users", user);
-

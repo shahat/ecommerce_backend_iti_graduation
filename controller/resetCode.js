@@ -11,16 +11,15 @@ const resetCode = async (req, res) => {
       const user = await usersModel.findOne({ passwordResetCode: enteredCode });
       console.log("is the user exist with the entered code? ->", user);
 
-      if (user) {
-        const codeExpiresAt = user.passwordResetCodeExpires;
-        // console.log("codeCreatedAt", codeExpiresAt);
-        const currentTime = new Date();
-        // console.log("currentTime", currentTime);
-        const timeDifference = (codeExpiresAt - currentTime) / (1000 * 60);
-        // console.log("timeDifference", timeDifference);
-           res.status(200).json({message:'Valid Code'})
+      const codeExpiresAt = user.passwordResetCodeExpires;
+      const currentTime = new Date();
+      const timeDifference = (codeExpiresAt - currentTime) / (1000 * 60);
 
-        if (timeDifference >= 5) {
+        console.log(timeDifference)
+      if (user) {
+        // res.status(200).json({ message: "Valid Code" });
+
+        if (timeDifference >= 0) {
           // Code is valid, proceed to the next stage
           console.log("TIME DIFFERENCE IS LESS THAN 5");
           return res.status(200).json({
@@ -29,10 +28,10 @@ const resetCode = async (req, res) => {
           });
         } else if (timeDifference < 0) {
           // Code has expired, inform the user
-          console.log("CODE IS SUPPOSED TO EXPIRED");
+          console.log("CODE IS SUPPOSED TO EXPIRE");
           return res
             .status(400)
-            .json({ message: "Code has expired. Please request a new code" });
+            .json({ message: "Code has expired. Please request a new one." });
         }
       } else {
         // Invalid code, inform the user
