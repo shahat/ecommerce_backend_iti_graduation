@@ -91,7 +91,7 @@ const productSchema = mongoose.Schema(
     totalSellingPrice: {
       type: Number,
       default: 0,
-    }
+    },
   },
   { timestamps: true }
 );
