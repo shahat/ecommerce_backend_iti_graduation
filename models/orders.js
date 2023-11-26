@@ -4,10 +4,8 @@ const orderProductSchema = mongoose.Schema({
   productId: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: "product",
-  }
-  
-})
-
+  },
+});
 
 const ordersSchema = mongoose.Schema(
   {
@@ -18,7 +16,7 @@ const ordersSchema = mongoose.Schema(
     paymentStatus: {
       type: String,
       default: "Cash on delivery",
-      enum: ["Cash on delivery", "Paid Online", "Completed" , "Refunded"],
+      enum: ["Cash on delivery", "paid", "Refunded"],
     },
     status: {
       type: String,
@@ -32,9 +30,9 @@ const ordersSchema = mongoose.Schema(
     shippingAddress: {
       type: Object,
     },
-    billingAddress: {
-      type: Object,
-    },
+    // billingAddress: {
+    //   type: Object,
+    // },
   },
   { timestamps: true }
 );
