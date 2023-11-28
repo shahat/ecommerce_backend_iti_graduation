@@ -6,7 +6,7 @@ const router = express.Router();
 const { createOrder } = require("../utils/ordersCreation");
 const { getAddresssBook } = require("../utils/getAddressBook");
 const { deteCartProducts } = require("../utils/deleteCartProducts");
-
+const axios = require("axios");
 // ============================================================================
 
 router.post("/create-checkout-session", async (req, res) => {
@@ -30,7 +30,7 @@ router.post("/create-checkout-session", async (req, res) => {
           name: item.productName,
           images: [item.productImage],
           metadata: {
-            productId: item._id,
+            id: item._id,
           },
         },
         unit_amount: item.price * 100,
@@ -88,13 +88,14 @@ router.post(
     if (eventType === "checkout.session.completed") {
       try {
         const customer = await stripe.customers.retrieve(data.customer);
+        const items = JSON.parse(customer.metadata.cartItems);
         console.log(
           "this is the customer ",
           customer,
           "this is the data ",
           data,
-          "the following is the cart items : ==================",
-          customer.metadata.cartItems
+          "the following is the cart itemsssssssssssssss : ==================",
+          typeof items
         );
         // ===============  get AddresssBook using userId >================
 
@@ -102,10 +103,35 @@ router.post(
           customer.metadata.userId,
           customer.description
         );
+        // ===============  get product data  >================
+        const orderProducts = [];
+        const getOrderProduct = async () => {
+          for (let i = 0; i < items.length; i++) {
+            try {
+              const res = await axios.get(
+                `http://localhost:4000/product/${items[i].productId}`
+              );
+
+              if (res.status === 201) {
+                console.log("Order created successfully:", res.data);
+              } else {
+                console.error(
+                  "Failed to create product order:",
+                  res.statusText
+                );
+              }
+            } catch (error) {
+              console.error("Error creating productorder:", error.message);
+              console.log("Error response data:", error.response.data);
+            }
+            orderProducts.push(res.data);
+          }
+        };
+        await getOrderProduct();
         // ================< handle construct order >================
         const orderData = {
           userId: customer.metadata.userId,
-          items: JSON.parse(customer.metadata.cartItems),
+          items: orderProducts,
           paymentStatus: data.payment_status,
           status: "Waiting for Supplier",
           amount: Number(data.amount_total),
