@@ -30,9 +30,6 @@ const ordersSchema = mongoose.Schema(
     shippingAddress: {
       type: Object,
     },
-    // billingAddress: {
-    //   type: Object,
-    // },
   },
   { timestamps: true }
 );

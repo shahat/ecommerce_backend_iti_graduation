@@ -30,7 +30,7 @@ router.post("/create-checkout-session", async (req, res) => {
           name: item.productName,
           images: [item.productImage],
           metadata: {
-            id: item._id,
+            productId: item._id,
           },
         },
         unit_amount: item.price * 100,
@@ -92,7 +92,9 @@ router.post(
           "this is the customer ",
           customer,
           "this is the data ",
-          data
+          data,
+          "the following is the cart items : ==================",
+          customer.metadata.cartItems
         );
         // ===============  get AddresssBook using userId >================
 
