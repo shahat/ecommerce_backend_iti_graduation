@@ -15,7 +15,6 @@ const subCategoryRoute = require("./routes/subCategoryRoute");
 const stripe = require("./routes/stripe");
 
 const coupon = require("./routes/coupon");
-
 // schedule Function to delete old guest carts
 const deleteOldCarts = require("./helpers/schedule");
 const connectDB = require("./config/db");
@@ -53,7 +52,6 @@ app.use("/emailRecovery", emailRecoveryRoute);
 app.use("/resetCode", resetCodeRoute);
 app.use("/resetPassword", resetPasswordRoute);
 app.use("/stripe", stripe);
-
 // handle not found not found middleware
 app.use("*", function (req, res, next) {
   res.status(404).json({ message: "notfound" });

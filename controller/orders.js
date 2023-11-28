@@ -2,29 +2,37 @@ const express = require("express");
 const ordersModel = require("../models/orders");
 
 const getComingOrderOfOneUser = async (req, res) => {
-  var userId = req.params.id
+  var userId = req.params.id;
   try {
-    const allOrders = await ordersModel.find({userId : userId , status : "Waiting for Supplier"});
+    const allOrders = await ordersModel.find({
+      userId: userId,
+      status: "Waiting for Supplier",
+    });
     res.status(200).json({ allOrders });
   } catch (err) {
-    res.status(400).json({error:`error : ${err}`, why:"Be"});
+    res.status(400).json({ error: `error : ${err}`, why: "Be" });
   }
 };
 
-const getPastOrderOfOneUser = async (req ,res) =>{
-  var userId = req.params.id
+const getPastOrderOfOneUser = async (req, res) => {
+  var userId = req.params.id;
   try {
-    const allOrders = await ordersModel.find({userId : userId , status : "shipped"});
+    const allOrders = await ordersModel.find({
+      userId: userId,
+      status: "shipped",
+    });
     res.status(200).json({ allOrders });
   } catch (err) {
-    res.status(400).json({error:`error : ${err}`, why:"Be"});
+    res.status(400).json({ error: `error : ${err}`, why: "Be" });
   }
-}
+};
 
 const getOneOrderById = async (req, res) => {
   var id = req.params.id;
   try {
-    const order = await ordersModel.find({ _id: id }).populate("items.productId");
+    const order = await ordersModel
+      .find({ _id: id })
+      .populate("items.productId");
     res.status(200).json({ order });
   } catch (err) {
     res.status(400).json(`error : ${err}`);
@@ -32,6 +40,7 @@ const getOneOrderById = async (req, res) => {
 };
 
 const createOrder = async (req, res) => {
+  console.log("this is ay order ");
   var order = req.body;
   try {
     const newOrder = await ordersModel.create(order);
@@ -69,5 +78,5 @@ module.exports = {
   createOrder,
   updatingOrders,
   deleteOrder,
-  getComingOrderOfOneUser
+  getComingOrderOfOneUser,
 };

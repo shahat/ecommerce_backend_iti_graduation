@@ -1,8 +1,8 @@
 const express = require("express");
 var router = express.Router();
-
 var {
-  getPastOrderOfOneUser,getComingOrderOfOneUser,
+  getPastOrderOfOneUser,
+  getComingOrderOfOneUser,
   getOneOrderById,
   createOrder,
   updatingOrders,
@@ -11,7 +11,6 @@ var {
 
 router.get("/past/:id", getPastOrderOfOneUser);
 router.get("/coming/:id", getComingOrderOfOneUser);
-
 router.post("/", createOrder);
 router.patch("/:id", updatingOrders);
 router.get("/:id", getOneOrderById);

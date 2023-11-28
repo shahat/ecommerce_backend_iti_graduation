@@ -4,7 +4,7 @@ const orderProductSchema = mongoose.Schema({
   productId: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: "product",
-  },
+  },z
 });
 
 const ordersSchema = mongoose.Schema(
@@ -30,9 +30,6 @@ const ordersSchema = mongoose.Schema(
     shippingAddress: {
       type: Object,
     },
-    // billingAddress: {
-    //   type: Object,
-    // },
   },
   { timestamps: true }
 );
