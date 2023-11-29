@@ -14,7 +14,7 @@ const createUser = async (req, res) => {
   }
 };
 // Get users
-const getAllUsers = async (req,auth, res) => {
+const getAllUsers = async (req, res) => {
   let limit = parseInt(req.params.limit);
   let skip = parseInt(req.params.skip);
 

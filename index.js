@@ -5,6 +5,7 @@ require("dotenv").config();
 const cors = require("cors");
 const app = express();
 const authRouter = require("./routes/authRouter");
+const adminRouter = require("./routes/admin");
 const productRouter = require("./routes/product");
 const ordersRouter = require("./routes/orders");
 const reviewsRouter = require("./routes/reviews");
@@ -40,6 +41,7 @@ deleteOldCarts();
 // Routes
 
 app.use("/users", authRouter);
+app.use("/admin", adminRouter);
 app.use("/product", productRouter);
 app.use("/orders", ordersRouter);
 app.use("/reviews", reviewsRouter);
