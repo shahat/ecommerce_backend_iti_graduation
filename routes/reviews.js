@@ -9,7 +9,7 @@ var {
 } = require("../controller/reviews");
 
 router.get("/:id", getAllReviewsOfProductById);
-router.post("/", createReview);
+router.post("/product/:id", createReview);
 router.patch("/:id", updatingReview);
 router.delete("/:id", deleteReview);
 

@@ -6,7 +6,7 @@ const router = express.Router();
 const { createOrder } = require("../utils/ordersCreation");
 const { getAddresssBook } = require("../utils/getAddressBook");
 const { deteCartProducts } = require("../utils/deleteCartProducts");
-
+const axios = require("axios");
 // ============================================================================
 
 router.post("/create-checkout-session", async (req, res) => {
@@ -16,7 +16,9 @@ router.post("/create-checkout-session", async (req, res) => {
       userId: req.body.userId,
       cartItems: JSON.stringify(
         req.body.order.items.map((item) => {
-          return { productId: item._id };
+          console.log("items ===========>", req.body.order.items);
+          console.log(item._id);
+          return { productId: item.productId };
         })
       ),
     },
@@ -88,13 +90,14 @@ router.post(
     if (eventType === "checkout.session.completed") {
       try {
         const customer = await stripe.customers.retrieve(data.customer);
+        const items = JSON.parse(customer.metadata.cartItems);
         console.log(
           "this is the customer ",
           customer,
           "this is the data ",
           data,
-          "the following is the cart items : ==================",
-          customer.metadata.cartItems
+          "the following is the cart itemsssssssssssssss : ==================",
+          items
         );
         // ===============  get AddresssBook using userId >================
 
@@ -102,15 +105,44 @@ router.post(
           customer.metadata.userId,
           customer.description
         );
+        // ===============  get product data  >================
+        const orderProducts = [];
+        const getOrderProduct = async () => {
+          console.log("items==============> ", items[0].id);
+          for (let i = 0; i < items.length; i++) {
+            console.log("=>>>>>>>>>>>", items[i].productId);
+            try {
+              const res = await axios.get(
+                `http://localhost:4000/product/${items[i].productId}`
+              );
+
+              console.log("response => ", res.data);
+              if (res.status === 200) {
+                console.log("Order created successfully:", res.data);
+                orderProducts.push(res.data.data);
+              } else {
+                console.error(
+                  "Failed to create product order:",
+                  res.statusText
+                );
+              }
+            } catch (error) {
+              console.error("Error creating productorder:", error.message);
+              console.log("Error response data:", error.response.data);
+            }
+          }
+        };
+        await getOrderProduct();
         // ================< handle construct order >================
         const orderData = {
           userId: customer.metadata.userId,
-          items: JSON.parse(customer.metadata.cartItems),
+          items: orderProducts,
           paymentStatus: data.payment_status,
           status: "Waiting for Supplier",
           amount: Number(data.amount_total),
           shippingAddress: { ...addressBook },
         };
+        console.log("order products => ", orderData);
         // ================< handle adding order >================
         await createOrder(orderData);
         // ================< handle delete Cart prod >================
