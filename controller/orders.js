@@ -26,13 +26,12 @@ const getPastOrderOfOneUser = async (req, res) => {
     res.status(400).json({ error: `error : ${err}`, why: "Be" });
   }
 };
-
+// ==============< getOneOrderById >==============
 const getOneOrderById = async (req, res) => {
-  var id = req.params.id;
+  let id = req.params.id;
+  console.log("this is product id ");
   try {
-    const order = await ordersModel
-      .find({ _id: id })
-      .populate("items.productId");
+    const order = await ordersModel.find({ _id: id });
     res.status(200).json({ order });
   } catch (err) {
     res.status(400).json(`error : ${err}`);

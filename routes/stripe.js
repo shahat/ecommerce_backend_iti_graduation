@@ -16,7 +16,9 @@ router.post("/create-checkout-session", async (req, res) => {
       userId: req.body.userId,
       cartItems: JSON.stringify(
         req.body.order.items.map((item) => {
-          return { productId: item._id };
+          console.log("items ===========>", req.body.order.items);
+          console.log(item._id);
+          return { productId: item.productId };
         })
       ),
     },
@@ -95,7 +97,7 @@ router.post(
           "this is the data ",
           data,
           "the following is the cart itemsssssssssssssss : ==================",
-          typeof items
+          items
         );
         // ===============  get AddresssBook using userId >================
 
@@ -106,14 +108,18 @@ router.post(
         // ===============  get product data  >================
         const orderProducts = [];
         const getOrderProduct = async () => {
+          console.log("items==============> ", items[0].id);
           for (let i = 0; i < items.length; i++) {
+            console.log("=>>>>>>>>>>>", items[i].productId);
             try {
               const res = await axios.get(
                 `http://localhost:4000/product/${items[i].productId}`
               );
 
-              if (res.status === 201) {
+              console.log("response => ", res.data);
+              if (res.status === 200) {
                 console.log("Order created successfully:", res.data);
+                orderProducts.push(res.data.data);
               } else {
                 console.error(
                   "Failed to create product order:",
@@ -124,7 +130,6 @@ router.post(
               console.error("Error creating productorder:", error.message);
               console.log("Error response data:", error.response.data);
             }
-            orderProducts.push(res.data);
           }
         };
         await getOrderProduct();
@@ -137,6 +142,7 @@ router.post(
           amount: Number(data.amount_total),
           shippingAddress: { ...addressBook },
         };
+        console.log("order products => ", orderData);
         // ================< handle adding order >================
         await createOrder(orderData);
         // ================< handle delete Cart prod >================

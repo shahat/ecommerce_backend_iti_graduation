@@ -2,7 +2,9 @@ const mongoose = require("mongoose");
 
 const orderProductSchema = mongoose.Schema(
   {
-    _id: String,
+    _id: {
+      type: mongoose.SchemaTypes.ObjectId,
+    },
     title: {
       type: String,
       required: true,
@@ -13,7 +15,6 @@ const orderProductSchema = mongoose.Schema(
     },
     title_ar: {
       type: String,
-      required: true,
       unique: true,
       trim: true,
       minLength: [3, "short product title"],
@@ -26,7 +27,6 @@ const orderProductSchema = mongoose.Schema(
     },
     description_ar: {
       type: String,
-      required: true,
       minLength: [20, "short product description"],
     },
     quantity: {
@@ -53,12 +53,12 @@ const orderProductSchema = mongoose.Schema(
     category: {
       type: String,
       ref: "category",
-      required: true,
+      // required: true,
     },
     subcategory: {
       type: String,
       ref: "subcategory",
-      required: true,
+      // required: true,
     },
     brand: {
       type: mongoose.SchemaTypes.ObjectId,
@@ -69,24 +69,7 @@ const orderProductSchema = mongoose.Schema(
       min: 1,
       max: 5,
     },
-    ratingQuantity: {
-      type: Number,
-      default: 0,
-    },
-    skus: [
-      {
-        name: {
-          type: String,
-        },
-        features: [{}],
-        price: {
-          type: Number,
-        },
-        color: [String],
-      },
-    ],
-  },
-  { timestamps: true }
+  }
 );
 
 const ordersSchema = mongoose.Schema(
