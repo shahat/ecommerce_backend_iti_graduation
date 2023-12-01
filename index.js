@@ -5,7 +5,6 @@ require("dotenv").config();
 const cors = require("cors");
 const app = express();
 const authRouter = require("./routes/authRouter");
-const adminRouter = require("./routes/admin");
 const productRouter = require("./routes/product");
 const ordersRouter = require("./routes/orders");
 const reviewsRouter = require("./routes/reviews");
@@ -13,6 +12,8 @@ const cartRouter = require("./routes/cart");
 const wishRouter = require("./routes/wishlist");
 const categoryRoute = require("./routes/categoryRoute");
 const subCategoryRoute = require("./routes/subCategoryRoute");
+
+const adminRouter = require("./routes/admin");
 
 const coupon = require("./routes/coupon");
 

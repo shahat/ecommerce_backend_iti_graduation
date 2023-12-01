@@ -98,7 +98,11 @@ const user = mongoose.Schema(
     passwordResetTokenExpires: Date,
     passwordResetCode: Number,
     passwordResetCodeExpires: Date,
-    addressBook: [addressBookSchema]
+    addressBook: [addressBookSchema],
+    image: {
+      type: String,
+      required: false
+    }
   },
   { timestamps: true }
 );

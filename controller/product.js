@@ -161,7 +161,8 @@ var productsCreatedPerMonth = async (req, res) => {
     // Calculate the date 12 months ago
     const twelveMonthsAgo = new Date();
     twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 11); // Subtracting 11 because the current month is included
-    productCount = await productModel.count({});
+    try {
+        productCount = await productModel.count({});
     await productModel
         .aggregate([
             {
@@ -195,6 +196,10 @@ var productsCreatedPerMonth = async (req, res) => {
                 res.status(201).json({ result, productCount });
             }
         });
+    } catch (error) {
+        res.status(500).json({message: "Unexpected Error"})
+    }
+    
 };
 
 module.exports = {
