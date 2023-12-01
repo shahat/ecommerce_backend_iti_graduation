@@ -6,9 +6,9 @@ const { tokenValidate } = require("../middlewares/isTokenValid");
 
 router.get(`/`, productController.getProducts);
 router.get(`/perMonth`, tokenValidate, productController.productsCreatedPerMonth);
-router.post(`/`, productController.saveProduct);
+router.post(`/`, tokenValidate, productController.saveProduct);
 router.get("/:id", productController.getProductById);
-router.patch("/:id", productController.updateProduct);
-router.delete("/:id", productController.deletProduct);
+router.patch("/:id", tokenValidate, productController.updateProduct);
+router.delete("/:id", tokenValidate, productController.deletProduct);
 
 module.exports = router;

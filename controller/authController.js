@@ -127,7 +127,7 @@ const protect = async (req, res, next) => {
     if (error.message === "User not found") {
       res.status(404).json({ message: "User not found" });
     } else {
-      res.status(401).json({ message: "Invalid token", kkk:"kkk" });
+      res.status(401).json({ message: "Invalid token" });
     }
   }
 };
