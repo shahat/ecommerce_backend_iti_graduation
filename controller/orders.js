@@ -21,11 +21,21 @@ const getPastOrderOfOneUser = async (req ,res) =>{
   }
 }
 
+const getAllOrdersForAdmin = async (req , res) =>{
+  try {
+    const allOrders = await ordersModel.find().limit(2).populate("userId");
+    res.status(200).json({ allOrders });
+  } catch (err) { 
+    res.status(400).json({error:`error : ${err}`});
+}
+}
+
+
 const getOneOrderById = async (req, res) => {
   var id = req.params.id;
   try {
-    const order = await ordersModel.find({ _id: id }).populate("items.productId");
-    res.status(200).json({ order });
+    const order = await ordersModel.findOne({ _id: id }).populate("userId");
+    res.status(200).json(order);
   } catch (err) {
     res.status(400).json(`error : ${err}`);
   }
@@ -53,10 +63,11 @@ const updatingOrders = async (req, res) => {
   }
 };
 
-const deleteOrder = async (req, res) => {
+const cancelOrder = async (req, res) => {
   var id = req.params.id;
   try {
-    const order = await ordersModel.deleteOne({ _id: id });
+    console.log(id);
+    const order = await ordersModel.updateOne({ _id: id } , {status : "canceled"});
     res.status(200).json(order);
   } catch (err) {
     res.status(400).json(`error: ${err}`);
@@ -68,6 +79,7 @@ module.exports = {
   getOneOrderById,
   createOrder,
   updatingOrders,
-  deleteOrder,
-  getComingOrderOfOneUser
+  cancelOrder,
+  getComingOrderOfOneUser,
+  getAllOrders: getAllOrdersForAdmin
 };
