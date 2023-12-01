@@ -1,8 +1,8 @@
 const express = require("express");
 var router = express.Router();
-
 var {
-  getPastOrderOfOneUser,getComingOrderOfOneUser,
+  getPastOrderOfOneUser,
+  getComingOrderOfOneUser,
   getOneOrderById,
   createOrder,
   updatingOrders,
@@ -13,7 +13,6 @@ const { tokenValidate } = require("../middlewares/isTokenValid");
 
 router.get("/past/:id", getPastOrderOfOneUser);
 router.get("/coming/:id", getComingOrderOfOneUser);
-
 router.post("/", createOrder);
 router.patch("/:id", tokenValidate, updatingOrders);
 router.get("/:id", getOneOrderById);

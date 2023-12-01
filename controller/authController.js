@@ -18,15 +18,35 @@ const signUp = async (req, res) => {
   console.log("req.body", req.body);
   const userId = req.param.id;
 
-  if (!email) {
-    return res.status(400).json({ message: "please provide your user email " });
+  if (!name) {
+    console.log("Name is provided", name);
+    return res.status(400).json({ message: "Please provide a name." });
   }
+
+  if (!email) {
+    console.log("email is not provided", email);
+    return res.status(400).json({ message: "Sorry, email cannot be empty." });
+  }
+
+  if (password !== confirmPassword) {
+    return res
+      .status(401)
+      .json({ message: "Sorry, password and confirm password do not match" });
+  }
+
+  const userName = await usersModel.findOne({ name });
+  if (userName) {
+    return res
+      .status(400)
+      .json({ message: "Please enter a different user name" });
+  }
+
   const user = await usersModel.findOne({ email });
   try {
     if (user)
       return res
         .status(404)
-        .json({ message: " You have an accout please signIn " });
+        .json({ message: " You have an account please sign in " });
     if (userId) {
       req.body._id = userId;
     }
