@@ -39,7 +39,7 @@ const getOneOrderById = async (req, res) => {
 };
 
 const createOrder = async (req, res) => {
-  console.log("this is ay order ");
+  console.log("this is new order ");
   var order = req.body;
   try {
     const newOrder = await ordersModel.create(order);
