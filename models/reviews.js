@@ -14,8 +14,20 @@ const reviewsSchema = mongoose.Schema(
       type: Number,
       enum: [1, 2, 3, 4, 5],
     },
+    name: {
+      type: String,
+      minLength: [3, "short product title"],
+      maxLength: [50, "long product title"],
+    },
+    reviewTitle: {
+      type: String,
+      minLength: [3, "short product title"],
+      maxLength: [50, "long product title"],
+    },
     comment: {
       type: String,
+      minLength: [3, "short product title"],
+      maxLength: [250, "long product title"],
     },
   },
   { timestamps: true }

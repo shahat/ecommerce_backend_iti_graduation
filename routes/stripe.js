@@ -108,9 +108,7 @@ router.post(
         // ===============  get product data  >================
         const orderProducts = [];
         const getOrderProduct = async () => {
-          console.log("items==============> ", items[0].id);
           for (let i = 0; i < items.length; i++) {
-            console.log("=>>>>>>>>>>>", items[i].productId);
             try {
               const res = await axios.get(
                 `http://localhost:4000/product/${items[i].productId}`
