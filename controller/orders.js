@@ -1,6 +1,8 @@
 const express = require("express");
 const ordersModel = require("../models/orders");
 
+// ==============< getOneOrderById >==============
+
 const getComingOrderOfOneUser = async (req, res) => {
   var userId = req.params.id;
   try {
@@ -13,6 +15,7 @@ const getComingOrderOfOneUser = async (req, res) => {
     res.status(400).json({ error: `error : ${err}`, why: "Be" });
   }
 };
+// ==============< getOneOrderById >==============
 
 const getPastOrderOfOneUser = async (req, res) => {
   var userId = req.params.id;
@@ -38,6 +41,8 @@ const getOneOrderById = async (req, res) => {
   }
 };
 
+// ==============< createOrder >==============
+
 const createOrder = async (req, res) => {
   console.log("this is ay order ");
   var order = req.body;
@@ -48,6 +53,8 @@ const createOrder = async (req, res) => {
     res.status(400).json(`error: ${err}`);
   }
 };
+
+// ==============< updatingOrders >==============
 
 const updatingOrders = async (req, res) => {
   var id = req.params.id;
@@ -61,6 +68,8 @@ const updatingOrders = async (req, res) => {
   }
 };
 
+// ==============< deleteOrder >==============
+
 const deleteOrder = async (req, res) => {
   var id = req.params.id;
   try {
@@ -68,6 +77,50 @@ const deleteOrder = async (req, res) => {
     res.status(200).json(order);
   } catch (err) {
     res.status(400).json(`error: ${err}`);
+  }
+};
+// ==============< completedOrderProducts >==============
+// GET products from all shipped orders
+const completedOrderProducts = async (req, res) => {
+  try {
+    const userId = req.user._id
+    // Find all orders with the "shipped" status for the specified user
+    const shippedOrders = await ordersModel.find({
+      userId,
+      status: "shipped",
+    });
+
+    if (!shippedOrders || shippedOrders.length === 0) {
+      return res.status(404).json({ message: "No shipped orders found" });
+    }
+
+    // Extract and send products from all shipped orders
+    const allProducts = shippedOrders.reduce((products, order) => {
+      const orderProducts = order.items.map((item) => ({
+        orderId: order._id,
+        title: item.title,
+        productId : item._id,
+        description: item.description,
+        quantity: item.quantity,
+        price: item.price,
+        discountPercentage: item.discountPercentage,
+        priceAfterDescount: item.priceAfterDescount,
+        colors: item.colors,
+        thumbnail: item.thumbnail,
+        images: item.images,
+        category: item.category,
+        subcategory: item.subcategory,
+        brand: item.brand,
+        rating: item.rating,
+      }));
+
+      return products.concat(orderProducts);
+    }, []);
+
+    res.status(200).json(allProducts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -78,4 +131,5 @@ module.exports = {
   updatingOrders,
   deleteOrder,
   getComingOrderOfOneUser,
+  completedOrderProducts,
 };

@@ -34,6 +34,7 @@ connectDB();
 const port = process.env.PORT || 5000;
 
 // middlewares
+
 app.use(cors());
 app.use(express.json());
 deleteOldCarts();
@@ -54,11 +55,12 @@ app.use("/emailRecovery", emailRecoveryRoute);
 app.use("/resetCode", resetCodeRoute);
 app.use("/resetPassword", resetPasswordRoute);
 app.use("/stripe", stripe);
+
 // handle not found not found middleware
+
 app.use("*", function (req, res, next) {
   res.status(404).json({ message: "notfound" });
 });
-
 app.use("/", (req, res) => {
   return res.json({
     message: "Welcome to the Node.js REST API using ExpressJS and MongoDB",
