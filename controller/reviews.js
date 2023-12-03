@@ -15,7 +15,7 @@ const getAllReviewsOfProductById = async (req, res) => {
 };
 
 // ======================== create review ========================
-const createReview = async (req , res) => {
+const createReview = async (req, res) => {
   var review = req.body;
   try {
     const newReview = await reviewsModel.create(review);

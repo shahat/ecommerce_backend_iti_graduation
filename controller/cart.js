@@ -101,62 +101,197 @@ var addUserCart = async (req, res) => {
   }
 };
 
+// var addOneProductToCart = async (req, res) => {
+//   let temp = userIdFromHeaders(req);
+//   let userId = temp ? temp.userId : undefined;
+//   let { quantity } = req.body;
+//   let { productId } = req.params;
+
+//   let data = { guest: false };
+
+//   var selectedProduct = await productModel.findOne({ _id: productId });
+//   var newItem = {
+//     _id: productId,
+//     priceWhenAdded: selectedProduct.price,
+//     quantity,
+//   };
+
+//   // Verify userId validity
+//   if (!userId) {
+//     try {
+//       userId = mongoose.Types.ObjectId();
+//       data = await cartModel.create({ userId, guest: true, items: [newItem] });
+//     } catch (err) {
+//       if (err.message.includes("duplicate key")) {
+//         let message = {
+//           cause: `Duplicate ${Object.keys(err.keyValue)[0]}`,
+//           message: "try it one more time",
+//         };
+//         return res.status(403).json({ message });
+//       } else {
+//         return res.status(400).json({ message: err });
+//       }
+//     }
+//   }
+
+//   // Create a cart if necessary
+//   let cart = await cartModel.findOne({ userId });
+//   if (!cart) {
+//     cart = await cartModel.create({ userId, guest: false, items: [] });
+//   }
+
+//   // Add the product to the user's cart
+//   // try {
+//   //   const selectedProduct = await productModel.findOne({ _id: productId });
+//   //   const newItem = {
+//   //     _id: productId,
+//   //     priceWhenAdded: selectedProduct.price,
+//   //     quantity,
+//   //   };
+
+//   //   const check = await cartModel.findOne({
+//   //     userId,
+//   //     "items._id": { $eq: productId },
+//   //   });
+
+//   //   if (check === null) {
+//   //     const updateNotification = await cartModel.updateOne(
+//   //       { userId },
+//   //       { $addToSet: { items: newItem } }
+//   //     );
+
+//   //     if (updateNotification.modifiedCount != 0) {
+//   //       // If the product has been added successfully, respond with the update notification
+//   //       res.status(202).json({
+//   //         status: updateNotification,
+//   //         data,
+//   //       });
+//   //     } else if (updateNotification.matchedCount === 0) {
+//   //       // If no cart was found, respond with an appropriate error message
+//   //       res.status(404).json({ message: "Couldn't find cart for this user" });
+//   //     }
+//   //   } else {
+//   //     const updateNotification = await cartModel.updateOne(
+//   //       { userId, "items._id": productId },
+//   //       { $inc: { "items.$.quantity": 1 } }
+//   //     );
+
+//   //     res.status(203).json({
+//   //       message: "We added another item of this Product to your cart",
+//   //       userId,
+//   //     });
+//   //   }
+//   // } catch (err) {
+//   //   res.status(401).json({ message: err.message });
+//   // }
+//   try {
+//     var selectedProduct = await productModel.findOne({ _id: productId });
+//     var newItem = {
+//       _id: productId,
+//       priceWhenAdded: selectedProduct.price,
+//       quantity,
+//     };
+//     var check = await cartModel.findOne({
+//       userId,
+//       "items._id": { $eq: productId },
+//     });
+//     if (check === null) {
+//       var updateNotification = await cartModel.updateOne(
+//         { userId },
+//         { $addToSet: { items: newItem } }
+//       );
+//       if (updateNotification.modifiedCount != 0) {
+//         // if the product has been added successfully just respond with the update notification
+//         res.status(202).json({
+//           status: updateNotification,
+//           data,
+//         });
+//       } else if (updateNotification.matchedCount === 0) {
+//         res.status(404).json({
+//           message: "Could'n find user with this id",
+//         });
+//       }
+//     } else {
+//       var updateNotification = await cartModel.updateOne(
+//         { userId, "items._id": productId },
+//         { $inc: { "items.$.quantity": 1 } }
+//       );
+//       res.status(203).json({
+//         message: "We added another item of this Product to your cart",
+//         userId,
+//       });
+//     }
+//   } catch (err) {
+//     res.status(401).json({ message: err.message });
+//   }
+// };
+
 var addOneProductToCart = async (req, res) => {
-  const temp = userIdFromHeaders(req);
-  const userId = temp ? temp.userId : undefined;
-
-  // Verify userId validity
-  if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
-    return res.status(400).json({ message: "Invalid user ID" });
+  var temp = userIdFromHeaders(req);
+  var userId = temp ? temp.userId : undefined;
+  // console.log(3);
+  var { quantity } = req.body;
+  var { productId } = req.params;
+  var data = { guest: false };
+  // case a guest added to cart===============>
+  // create a guest cart then add to it
+  if (!userId) {
+    try {
+      userId = mongoose.Types.ObjectId();
+      data = await cartModel.create({ userId, guest: true, items: [] });
+    } catch (err) {
+      if (err.message.includes("duplicate key")) {
+        let message = {
+          cause: `Duplicate ${Object.keys(err.keyValue)[0]}`,
+          message: "try it one more time",
+        };
+        res.status(403).json({ message });
+      } else {
+        res.status(400).json({ message: err });
+      }
+    }
   }
-
-  const { quantity } = req.body;
-  const { productId } = req.params;
-
-  const data = { guest: false };
-
-  // Create a cart if necessary
-  let cart = await cartModel.findOne({ userId });
-  if (!cart) {
-    cart = await cartModel.create({ userId, guest: false, items: [] });
-  }
-
-  // Add the product to the user's cart
+  // adding the product to the users cart
   try {
-    const selectedProduct = await productModel.findOne({ _id: productId });
-    const newItem = {
+    var selectedProduct = await productModel.findOne({ _id: productId });
+    var newItem = {
       _id: productId,
       priceWhenAdded: selectedProduct.price,
       quantity,
     };
 
-    const check = await cartModel.findOne({
+    var check = await cartModel.findOne({
       userId,
       "items._id": { $eq: productId },
     });
 
     if (check === null) {
-      const updateNotification = await cartModel.updateOne(
+        let cart = await cartModel.findOne({ userId });
+        if (!cart) {
+          cart = await cartModel.create({ userId, guest: false, items: [] });
+        }
+      var updateNotification = await cartModel.updateOne(
         { userId },
         { $addToSet: { items: newItem } }
       );
-
+      // console.log("UpdateNotification", updateNotification);
+   
       if (updateNotification.modifiedCount != 0) {
-        // If the product has been added successfully, respond with the update notification
-        res.status(202).json({
+        // if the product has been added successfully just respond with the update notification
+        return res.status(202).json({
           status: updateNotification,
           data,
         });
       } else if (updateNotification.matchedCount === 0) {
-        // If no cart was found, respond with an appropriate error message
-        res.status(404).json({ message: "Couldn't find cart for this user" });
+        return res.status(404).json({
+          message: "Couldn't find user with this id",
+        });
       }
     } else {
-      const updateNotification = await cartModel.updateOne(
+      var updateNotification = await cartModel.updateOne(
         { userId, "items._id": productId },
         { $inc: { "items.$.quantity": 1 } }
       );
-
       res.status(203).json({
         message: "We added another item of this Product to your cart",
         userId,
