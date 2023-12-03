@@ -18,7 +18,7 @@ const getCategories = asyncHandler(async (req, res) => {
   const skip = (page - 1) * limit;
   const returnedCategory = await categoryModel
     .find({})
-    .select(`${nameField}  image`) // Specify the fields to be selected
+    // .select(`${nameField}  image`) // Specify the fields to be selected
     .populate("name")
     .skip(skip)
     .limit(limit);
@@ -66,14 +66,8 @@ const getCategoryById = asyncHandler(async (req, res) => {
 // new:true -> to return the updated category, NOT before the update.
 const updateCategory = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { name } = req.body;
-  category = await categoryModel.findOneAndUpdate(
-    { _id: id },
-    { name: name },
-    {
-      new: true,
-    }
-  );
+  // const { name } = req.body;
+  category = await categoryModel.findOneAndUpdate({ _id: id }, req.body);
   category
     ? res.status(200).json({ data: category })
     : res.status(404).json({ message: `No category for this id ${id}` });

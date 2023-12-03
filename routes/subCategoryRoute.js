@@ -16,7 +16,7 @@ const router = express.Router({ mergeParams: true });
 
 router.post("/", createSubCategory);
 router.get("/", getSubCategories);
-router.get("/:id", subcategoryProducts);
+router.get("/products/:id", subcategoryProducts);
 router.get("/:id", getSubCategoryById);
 router.patch("/:id", updateSubCategory);
 router.delete("/:id", deleteSubCategory);
