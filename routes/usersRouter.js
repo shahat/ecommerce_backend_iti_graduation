@@ -12,7 +12,7 @@ const {
   updateOneUser,
   deleteOneUser,
 } = require("../controller/user");
-
+const { tokenValidate } = require("../middlewares/isTokenValid");
 // step-3 => define the function the you import from the controller on the route
 
 router.post("/", createUser);
