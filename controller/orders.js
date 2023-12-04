@@ -30,6 +30,16 @@ const getPastOrderOfOneUser = async (req, res) => {
   }
 };
 // ==============< getOneOrderById >==============
+const getAllOrdersForAdmin = async (req , res) =>{
+  try {
+    const allOrders = await ordersModel.find().limit(2).populate("userId");
+    res.status(200).json({ allOrders });
+  } catch (err) { 
+    res.status(400).json({error:`error : ${err}`});
+}
+}
+
+
 const getOneOrderById = async (req, res) => {
   let id = req.params.id;
   console.log("this is product id ", id);
@@ -74,10 +84,11 @@ const updatingOrders = async (req, res) => {
 
 // ==============< deleteOrder >==============
 
-const deleteOrder = async (req, res) => {
+const cancelOrder = async (req, res) => {
   var id = req.params.id;
   try {
-    const order = await ordersModel.deleteOne({ _id: id });
+    console.log(id);
+    const order = await ordersModel.updateOne({ _id: id } , {status : "canceled"});
     res.status(200).json(order);
   } catch (err) {
     res.status(400).json(`error: ${err}`);
@@ -133,7 +144,7 @@ module.exports = {
   getOneOrderById,
   createOrder,
   updatingOrders,
-  deleteOrder,
+  cancelOrder,
   getComingOrderOfOneUser,
-  completedOrderProducts,
+  getAllOrders: getAllOrdersForAdmin
 };

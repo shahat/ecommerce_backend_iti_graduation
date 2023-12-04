@@ -14,13 +14,8 @@ const setCategoryIdToBody = (req, res, next) => {
 const createSubCategory = asyncHandler(async (req, res) => {
   // Nested route
   if (!req.body.category) req.body.category = req.params.categoryId;
-  const { name, parentCategory, image, name_ar } = req.body;
-  const subCategory = await subCategoryModel.create({
-    name,
-    parentCategory,
-    image,
-    name_ar,
-  });
+  const subcategory = req.body;
+  const subCategory = await subCategoryModel.create(subcategory);
   res.status(201).json({
     message: "subCategory has been created succesfully",
     data: subCategory,
@@ -46,7 +41,7 @@ const getSubCategories = asyncHandler(async (req, res) => {
 
   const returnedSubCategory = await subCategoryModel
     .find(filterObject)
-    .select(`${nameField} image parentCategory`)
+    // .select(`${nameField} image parentCategory`)
     .skip(skip)
     .limit(limit);
 
@@ -106,11 +101,10 @@ const getSubCategoryById = asyncHandler(async (req, res) => {
 
 const updateSubCategory = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { name, category } = req.body;
+  // const { name, category } = req.body;
   const subCategory = await subCategoryModel.findOneAndUpdate(
     { _id: id },
-    { name, category },
-    { new: true }
+    req.body
   );
   subCategory
     ? res.status(200).json({
