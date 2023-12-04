@@ -86,7 +86,7 @@ const ordersSchema = mongoose.Schema(
     status: {
       type: String,
       default: "Waiting for Supplier",
-      enum: ["shipped", "Waiting for Supplier"],
+      enum: ["shipped", "Waiting for Supplier" , "canceled"],
     },
     amount: {
       type: Number,
