@@ -1,6 +1,6 @@
 const express = require("express");
-const resetPassword = require("../controller/resetPassword");
 const router = express.Router();
+const resetPassword = require("../controller/resetPassword");
 
 router.patch('/',resetPassword)
 

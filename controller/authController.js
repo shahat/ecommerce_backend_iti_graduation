@@ -52,7 +52,7 @@ const signUp = async (req, res) => {
     const newUser = await usersModel.create(req.body);
     const token = generateToken(newUser._id);
     res.cookie("authenticate", token);
-    console.log("token", token);
+    // console.log("token", token);
     return res.status(201).json({
       token: token,
       message: " user is saved ",
@@ -66,7 +66,6 @@ const signUp = async (req, res) => {
 // // =========================== signIn ===========================
 
 const signIn = async (req, res) => {
-  
   const { email, password } = req.body;
 
   // Check if email & password are present in the request body
@@ -88,8 +87,8 @@ const signIn = async (req, res) => {
   try {
     const isValid = await bcrypt.compare(password, user.password);
     // console.log(isValid);
-    console.log("password", password);
-    console.log("userPassword", user.password);
+    // console.log("password", password);
+    // console.log("userPassword", user.password);
 
     if (!isValid) {
       return res.status(401).json({ message: "Invalid email or password" });
@@ -98,7 +97,7 @@ const signIn = async (req, res) => {
     return res.status(200).json({ token: generateToken(user._id), user: user });
   } catch (error) {
     // Handle any errors related to bcrypt.compare() here
-    console.error("Error comparing passwords:", error);
+    // console.error("Error comparing passwords:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -139,7 +138,7 @@ const protect = async (req, res, next) => {
     //   throw new Error("Password has changed");
     // }
     req.user = user;
-    console.log(req.user);
+    // console.log(req.user);
     next();
   } catch (error) {
     // Use a more specific error message in the catch block
@@ -158,7 +157,7 @@ const protect = async (req, res, next) => {
 // =========================== restrict ===========================
 
 const restrict = (role) => {
-  console.log(role);
+  // console.log(role);
   return (req, res, next) => {
     if (req.user.role !== role) {
       return res.status(403).json({ error: "Unauthorized" });
