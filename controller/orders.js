@@ -32,7 +32,7 @@ const getPastOrderOfOneUser = async (req, res) => {
 // ==============< getOneOrderById >==============
 const getAllOrdersForAdmin = async (req , res) =>{
   try {
-    const allOrders = await ordersModel.find().limit(2).populate("userId");
+    const allOrders = await ordersModel.find().populate("userId");
     res.status(200).json({ allOrders });
   } catch (err) { 
     res.status(400).json({error:`error : ${err}`});
@@ -56,8 +56,7 @@ const getOneOrderById = async (req, res) => {
 // ==============< createOrder >==============
 
 const createOrder = async (req, res) => {
-  console.log("this is ay order ");
-
+  console.log("this is new order ");
   var order = req.body;
   console.log("this is the order => ", order);
   try {
