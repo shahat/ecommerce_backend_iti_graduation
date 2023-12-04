@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const googleAuthCallback = async (req, res) => {
   const { code } = req.query;
   const oauthUserInfo = await getGoogleUser({ code });
+  console.log("AY 7AGAAAAAA", oauthUserInfo); // Log the user info to verify
 
   const updatedUser = await updateOrCreateUserFromOauth({ oauthUserInfo });
 
