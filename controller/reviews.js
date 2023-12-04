@@ -7,7 +7,8 @@ const getAllReviewsOfProductById = async (req, res) => {
   try {
     const allReviews = await reviewsModel
       .find({ productId: id })
-      .populate("productId");
+      .populate("productId")
+      .populate("userId");
     res.status(200).json({ allReviews });
   } catch (err) {
     res.status(400).json(`error : ${err}`);
