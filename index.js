@@ -19,12 +19,11 @@ const coupon = require("./routes/coupon");
 const deleteOldCarts = require("./helpers/schedule");
 const connectDB = require("./config/db");
 const errorHandler = require("./middlewares/error");
-// const nodemailer = require("nodemailer");
-// const usersModel = require("./models/user");
 const emailRecoveryRoute = require("./routes/emailRecovery");
 const resetCodeRoute = require("./routes/resetCode");
 const resetPasswordRoute = require("./routes/resetPassword");
-
+const googleUrlOauthRoute = require("./routes/getGoogleOauthUrlRoute");
+const googleOauthCallbackRoute = require("./routes/googleOauthCallbackRoute");
 // Connect to DB
 connectDB();
 
@@ -51,6 +50,8 @@ app.use("/coupon", coupon);
 app.use("/emailRecovery", emailRecoveryRoute);
 app.use("/resetCode", resetCodeRoute);
 app.use("/resetPassword", resetPasswordRoute);
+app.use("/auth/google/url", googleUrlOauthRoute);
+app.use("/auth/google/callback", googleOauthCallbackRoute);
 app.use("/stripe", stripe);
 // handle not found not found middleware
 app.use("*", function (req, res, next) {

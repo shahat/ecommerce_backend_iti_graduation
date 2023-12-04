@@ -7,7 +7,7 @@ const resetPassword = async (req, res) => {
   const { userPassword, enteredCode } = req.body;
   const { password, confirmPassword } = userPassword;
 
-  console.log("ENTERED CODE From reset", enteredCode);
+  // console.log("ENTERED CODE From reset", enteredCode);
 
   if (!password || !confirmPassword) {
     return res
@@ -31,7 +31,7 @@ const resetPassword = async (req, res) => {
         .status(400)
         .json({ message: "Password and confirm password do not match" });
     }
-    console.log("passBeforeHash", password);
+    // console.log("passBeforeHash", password);
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const updatedUser = await usersModel.findOneAndUpdate(
@@ -44,7 +44,7 @@ const resetPassword = async (req, res) => {
       },
       { new: true }
     );
-    console.log("UPDATED USER", updatedUser);
+    // console.log("UPDATED USER", updatedUser);
   
 
     if (!updatedUser) {
@@ -53,7 +53,7 @@ const resetPassword = async (req, res) => {
 
     res.status(200).json({ message: "Password has been reset successfully" });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

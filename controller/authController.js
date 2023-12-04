@@ -13,9 +13,9 @@ function generateToken(id) {
 /* =========================== signUp =========================== */
 
 const signUp = async (req, res) => {
-  console.log("inside the sign up ");
   const { email, name, password, confirmPassword } = req.body;
-  console.log("req.body", req.body);
+
+ 
   const userId = req.param.id;
 
   if (!name) {
@@ -46,7 +46,7 @@ const signUp = async (req, res) => {
     if (user)
       return res
         .status(404)
-        .json({ message: " You have an account please sign in " });
+        .json({ message: " You have an account, please sign in " });
     if (userId) {
       req.body._id = userId;
     }
@@ -54,10 +54,10 @@ const signUp = async (req, res) => {
     const newUser = await usersModel.create(req.body);
     const token = generateToken(newUser._id);
     res.cookie("authenticate", token);
-    console.log("token", token);
+    // console.log("token", token);
     return res.status(201).json({
       token: token,
-      message: " user is saved is saved ",
+      message: " user is saved ",
       data: { user: newUser },
     });
   } catch (error) {
@@ -68,7 +68,6 @@ const signUp = async (req, res) => {
 // // =========================== signIn ===========================
 
 const signIn = async (req, res) => {
-  console.log("request is RECEIVED from signin funtcion ");
   const { email, password } = req.body;
 
   // Check if email & password are present in the request body
@@ -83,25 +82,25 @@ const signIn = async (req, res) => {
 
   if (!user) {
     return res
-      .status(404)
+      .status(401)
       .json({ message: "Provided user does not exist, please sign up first" });
   }
 
   try {
     const isValid = await bcrypt.compare(password, user.password);
     // console.log(isValid);
-    console.log("password", password);
-    console.log("userPassword", user.password);
+    // console.log("password", password);
+    // console.log("userPassword", user.password);
 
     if (!isValid) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    res.status(200).json({ token: generateToken(user._id), user: user });
+    return res.status(200).json({ token: generateToken(user._id), user: user });
   } catch (error) {
     // Handle any errors related to bcrypt.compare() here
-    console.error("Error comparing passwords:", error);
-    res.status(500).json({ message: "Internal server error" });
+    // console.error("Error comparing passwords:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -141,7 +140,7 @@ const protect = async (req, res, next) => {
     //   throw new Error("Password has changed");
     // }
     req.user = user;
-    console.log(req.user);
+    // console.log(req.user);
     next();
   } catch (error) {
     // Use a more specific error message in the catch block
@@ -160,7 +159,7 @@ const protect = async (req, res, next) => {
 // =========================== restrict ===========================
 
 const restrict = (role) => {
-  console.log(role);
+  // console.log(role);
   return (req, res, next) => {
     if (req.user.role !== role) {
       return res.status(403).json({ error: "Unauthorized" });

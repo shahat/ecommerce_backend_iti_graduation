@@ -23,6 +23,7 @@
     "express-async-handler": "^1.2.0",
     "express-session": "^1.17.3",
     "google-auth-library": "^9.2.0",
+    "googleapis": "^129.0.0",
     "jsonwebtoken": "^9.0.2",
     "mogoose": "^0.0.1-security",
     "mongoose": "^6.10.1",
