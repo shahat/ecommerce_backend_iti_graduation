@@ -30,12 +30,22 @@ const getPastOrderOfOneUser = async (req, res) => {
   }
 };
 // ==============< getOneOrderById >==============
+const getAllOrdersForAdmin = async (req , res) =>{
+  try {
+    const allOrders = await ordersModel.find().populate("userId");
+    res.status(200).json({ allOrders });
+  } catch (err) { 
+    res.status(400).json({error:`error : ${err}`});
+}
+}
+
+
 const getOneOrderById = async (req, res) => {
   let id = req.params.id;
   console.log("this is product id ");
   try {
-    const order = await ordersModel.find({ _id: id });
-    res.status(200).json({ order });
+    const order = await ordersModel.findOne({ _id: id }).populate("userId");
+    res.status(200).json(order);
   } catch (err) {
     res.status(400).json(`error : ${err}`);
   }
@@ -46,6 +56,7 @@ const getOneOrderById = async (req, res) => {
 const createOrder = async (req, res) => {
   console.log("this is new order ");
   var order = req.body;
+  console.log("this is the order => ", order);
   try {
     const newOrder = await ordersModel.create(order);
     res.status(201).json(newOrder);
@@ -70,10 +81,11 @@ const updatingOrders = async (req, res) => {
 
 // ==============< deleteOrder >==============
 
-const deleteOrder = async (req, res) => {
+const cancelOrder = async (req, res) => {
   var id = req.params.id;
   try {
-    const order = await ordersModel.deleteOne({ _id: id });
+    console.log(id);
+    const order = await ordersModel.updateOne({ _id: id } , {status : "canceled"});
     res.status(200).json(order);
   } catch (err) {
     res.status(400).json(`error: ${err}`);
@@ -83,7 +95,7 @@ const deleteOrder = async (req, res) => {
 // GET products from all shipped orders
 const completedOrderProducts = async (req, res) => {
   try {
-    const userId = req.user._id
+    const userId = req.user._id;
     // Find all orders with the "shipped" status for the specified user
     const shippedOrders = await ordersModel.find({
       userId,
@@ -99,7 +111,7 @@ const completedOrderProducts = async (req, res) => {
       const orderProducts = order.items.map((item) => ({
         orderId: order._id,
         title: item.title,
-        productId : item._id,
+        productId: item._id,
         description: item.description,
         quantity: item.quantity,
         price: item.price,
@@ -129,7 +141,7 @@ module.exports = {
   getOneOrderById,
   createOrder,
   updatingOrders,
-  deleteOrder,
+  cancelOrder,
   getComingOrderOfOneUser,
-  completedOrderProducts,
+  getAllOrders: getAllOrdersForAdmin
 };

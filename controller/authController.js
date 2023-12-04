@@ -50,6 +50,7 @@ const signUp = async (req, res) => {
     if (userId) {
       req.body._id = userId;
     }
+    
     const newUser = await usersModel.create(req.body);
     const token = generateToken(newUser._id);
     res.cookie("authenticate", token);

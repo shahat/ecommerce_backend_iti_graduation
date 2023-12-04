@@ -19,11 +19,11 @@ const getAllUsers = async (req, res) => {
   let skip = parseInt(req.params.skip);
 
   try {
-    let users = await usersModel.find().limit(limit).skip(skip);
+    let users = await usersModel.find({role: "user"}).limit(limit).skip(skip);
     res.status(200).json(users);
   } catch (err) {
     res.status(500).json({ message: "something Went rong " });
-  }
+  } 
 };
 // Get user  =>   id
 const getOneUser = async (req, res) => {

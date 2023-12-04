@@ -1,20 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const userRouter = require("./users.js");
 const {
-    getAllAdmins,
+    getOneAdmin,
     addAdmin,
     login,
-    logOut,
     modifyAdmin,
     removeAdmin,
 } = require("../controller/admin.js");
+const { tokenValidate } = require("../middlewares/isTokenValid.js");
 
-// router.get("/", getAllAdmins);
-router.post("/register", addAdmin);
-router.post("/login", login);
-router.get("/logout", logOut);
-// router.patch("/", modifyAdmin);
-// router.delete("/", removeAdmin);
+
+router.get("/", tokenValidate, getOneAdmin); //token=>headers
+router.post("/register", tokenValidate, addAdmin); // email=>body
+router.post("/login", login); // email, password=>body
+router.patch("/", tokenValidate, modifyAdmin); // token=>headers, updates=>body 
+router.delete("/:id", tokenValidate, removeAdmin);
 
 module.exports = router;
