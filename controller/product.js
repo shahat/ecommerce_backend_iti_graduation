@@ -48,9 +48,9 @@ const getProducts = async (req, res) => {
         const titleField = lng === "ar" ? "title_ar" : "title";
         const descriptionField =
             lng === "ar" ? "description_ar" : "description";
-        mongooseQuery = mongooseQuery.select(
-            `${titleField} ${descriptionField} price priceAfterDescount images boughtUnits totalSellingPrice`
-        );
+        // mongooseQuery = mongooseQuery.select(
+        //     `${titleField} ${descriptionField} price priceAfterDescount images boughtUnits totalSellingPrice`
+        // );
 
         for (const key in filters) {
             mongooseQuery = mongooseQuery.where(key, filters[key]);

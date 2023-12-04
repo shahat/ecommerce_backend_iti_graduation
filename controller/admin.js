@@ -105,16 +105,13 @@ const addAdmin = async (req, res) => {
 // // =========================== Login ===========================
 
 const login = async (req, res) => {
-    console.log("request is RECEIVED from admin login funtcion ");
     const { email, password } = req.body;
-
     // Check if email & password are present in the request body
     if (!email || !password) {
         return res
             .status(400)
             .json({ message: "Please provide your email and password" });
     }
-
     // Check if the user with the given email exists in our DB
     const admin = await usersModel.findOne({ email, role:"admin" }).select("+password");
     if (!admin) {
@@ -122,7 +119,6 @@ const login = async (req, res) => {
             message: "Provided Admin does not exist, please register first",
         });
     }
-
     try {
         const isValid = await bcrypt.compare(password, admin.password);
         // console.log(isValid);
@@ -136,9 +132,7 @@ const login = async (req, res) => {
         }
         console.log("status(200)");
         res.status(200).json({ token: generateToken(admin._id), expires_at: 7200 });
-        // res.status(200).cookie( "token", generateToken(admin._id), {httpOnly:true, secure:true} );
     } catch (error) {
-        // Handle any errors related to bcrypt.compare() here
         console.error("Error comparing passwords:", error);
         res.status(500).json({ message: "Internal server error" });
     }
