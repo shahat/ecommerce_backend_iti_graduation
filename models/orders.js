@@ -11,19 +11,12 @@ const orderProductSchema = mongoose.Schema({
     minLength: [3, "short product title"],
     maxLength: [80, "long product title"],
   },
-  title_ar: {
-    default: "",
-    type: String,
-    trim: true,
-  },
+
   description: {
     type: String,
     required: true,
   },
-  description_ar: {
-    default: " ",
-    type: String,
-  },
+
   quantity: {
     type: Number,
     required: true,

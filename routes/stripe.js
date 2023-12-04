@@ -27,8 +27,8 @@ router.post("/create-checkout-session", async (req, res) => {
       price_data: {
         currency: "usd",
         product_data: {
-          name: item.productName,
-          images: [item.productImage],
+          name: item.title,
+          images: [item.thumbnail],
           metadata: {
             productId: item._id,
           },
@@ -103,7 +103,7 @@ router.post(
           customer.metadata.userId,
           customer.description
         );
-// ===============  get product data  >================
+        // ===============  get product data  >================
         const orderProducts = [];
         const getOrderProduct = async () => {
           for (let i = 0; i < items.length; i++) {
