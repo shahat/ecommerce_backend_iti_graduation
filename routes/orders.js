@@ -15,7 +15,7 @@ const { tokenValidate } = require("../middlewares/isTokenValid");
 
 router.get("/past/:id", getPastOrderOfOneUser);
 router.get("/coming/:id", getComingOrderOfOneUser);
-router.get("/", getAllOrders);
+router.get("/", tokenValidate, getAllOrders);
 
 router.post("/", createOrder);
 router.patch("/:id", tokenValidate, updatingOrders);
