@@ -13,7 +13,7 @@ var {
 
 router.get("/past/:id", getPastOrderOfOneUser);
 router.get("/coming/:id", getComingOrderOfOneUser);
-router.get("/completedOrderProducts", protect, completedOrderProducts);
+router.get("/completedOrderProducts", completedOrderProducts);
 router.post("/", createOrder);
 router.patch("/:id", updatingOrders);
 router.get("/:id", getOneOrderById);

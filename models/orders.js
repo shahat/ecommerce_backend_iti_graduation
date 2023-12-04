@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const orderProductSchema = mongoose.Schema({
   _id: {
-    type: mongoose.SchemaTypes.ObjectId,
+    type:  mongoose.SchemaTypes.ObjectId,
   },
   title: {
     type: String,
@@ -11,7 +11,10 @@ const orderProductSchema = mongoose.Schema({
     minLength: [3, "short product title"],
     maxLength: [80, "long product title"],
   },
-
+  title_ar: {
+    type: String,
+    default: "Default Title AR",
+  },
   description: {
     type: String,
     required: true,
@@ -41,14 +44,6 @@ const orderProductSchema = mongoose.Schema({
   category: {
     type: String,
     ref: "category",
-  },
-  subcategory: {
-    type: String,
-    ref: "subcategory",
-  },
-  brand: {
-    type: mongoose.SchemaTypes.ObjectId,
-    ref: "brand",
   },
   rating: {
     type: Number,

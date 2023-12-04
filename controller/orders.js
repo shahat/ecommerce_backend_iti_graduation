@@ -32,9 +32,11 @@ const getPastOrderOfOneUser = async (req, res) => {
 // ==============< getOneOrderById >==============
 const getOneOrderById = async (req, res) => {
   let id = req.params.id;
-  console.log("this is product id ");
+  console.log("this is product id ", id);
   try {
     const order = await ordersModel.find({ _id: id });
+    console.log("order ==============> ", order);
+
     res.status(200).json({ order });
   } catch (err) {
     res.status(400).json(`error : ${err}`);
@@ -85,7 +87,7 @@ const deleteOrder = async (req, res) => {
 // GET products from all shipped orders
 const completedOrderProducts = async (req, res) => {
   try {
-    const userId = req.user._id;
+    // const userId = req.user._id;
     // Find all orders with the "shipped" status for the specified user
     const shippedOrders = await ordersModel.find({
       userId,

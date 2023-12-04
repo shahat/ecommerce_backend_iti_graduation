@@ -14,7 +14,7 @@ function generateToken(id) {
 
 const signUp = async (req, res) => {
   console.log("inside the sign up ");
-  const { email } = req.body;
+  const { email, name, password, confirmPassword } = req.body;
   console.log("req.body", req.body);
   const userId = req.param.id;
 

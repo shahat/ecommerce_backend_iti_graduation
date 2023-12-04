@@ -7,6 +7,7 @@ const { createOrder } = require("../utils/ordersCreation");
 const { getAddresssBook } = require("../utils/getAddressBook");
 const { deteCartProducts } = require("../utils/deleteCartProducts");
 const axios = require("axios");
+
 // ============================================================================
 
 router.post("/create-checkout-session", async (req, res) => {
@@ -16,7 +17,8 @@ router.post("/create-checkout-session", async (req, res) => {
       userId: req.body.userId,
       cartItems: JSON.stringify(
         req.body.order.items.map((item) => {
-          return { productId: item.productId, quantity: item.quantity };
+          console.log("this is the item ====> ", item);
+          return { productId: item._id, quantity: item.quantity };
         })
       ),
     },
