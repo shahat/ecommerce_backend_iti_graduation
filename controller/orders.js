@@ -55,7 +55,9 @@ const getOneOrderById = async (req, res) => {
 
 const createOrder = async (req, res) => {
   console.log("this is ay order ");
+
   var order = req.body;
+  console.log("this is the order => ", order);
   try {
     const newOrder = await ordersModel.create(order);
     res.status(201).json(newOrder);
@@ -94,7 +96,7 @@ const cancelOrder = async (req, res) => {
 // GET products from all shipped orders
 const completedOrderProducts = async (req, res) => {
   try {
-    const userId = req.user._id
+    const userId = req.user._id;
     // Find all orders with the "shipped" status for the specified user
     const shippedOrders = await ordersModel.find({
       userId,
@@ -110,7 +112,7 @@ const completedOrderProducts = async (req, res) => {
       const orderProducts = order.items.map((item) => ({
         orderId: order._id,
         title: item.title,
-        productId : item._id,
+        productId: item._id,
         description: item.description,
         quantity: item.quantity,
         price: item.price,

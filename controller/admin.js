@@ -14,7 +14,6 @@ var userIdFromHeaders = (req) => {
     const { token } = req.headers;
     if (token) {
         try {
-            console.log("userIdFromHeaders",jwt.decode(token));
             userId = jwt.decode(token).id;
         } catch (err) {
             console.log(err);
@@ -76,25 +75,31 @@ const removeAdmin = async (req, res) => {
 /* =========================== signUp =========================== */
 
 const addAdmin = async (req, res) => {
-    console.log("inside the admin sign up ");
     const { email } = req.body;
-    console.log("admin: req.body", req.body);
 
     if (!email) {
         return res.status(400).json({ message: "please provide your email " });
     }
-    const user = await usersModel.findOne({ email, role:"admin" });
+    const user = await usersModel.findOne({ email });
+    const admin = await usersModel.findOne({ email, role: "admin" });
     try {
-        if (user)
-            return res
-                .status(404)
-                .json({ message: " You have an accout please signIn " });
+        if (admin) {
+            return res.status(400).json({
+                message:
+                    " This email is already assigned as Admin. You can use it to login to the dashboard. ",
+            });
+        } else if (user) {
+            return res.status(400).json({
+                message:
+                    " This email is used for a user account. Choose another email ",
+            });
+        }
         const newUser = await usersModel.create(req.body);
         const token = generateToken(newUser._id);
         res.cookie("authenticate", token);
         return res.status(201).json({
             token: token,
-            message: " admin is saved",
+            message: ` ${req.body.name} was added successfully as Admin`,
             data: { user: newUser },
         });
     } catch (error) {
@@ -105,6 +110,7 @@ const addAdmin = async (req, res) => {
 // // =========================== Login ===========================
 
 const login = async (req, res) => {
+    console.log(req);
     const { email, password } = req.body;
     // Check if email & password are present in the request body
     if (!email || !password) {
@@ -113,7 +119,9 @@ const login = async (req, res) => {
             .json({ message: "Please provide your email and password" });
     }
     // Check if the user with the given email exists in our DB
-    const admin = await usersModel.findOne({ email, role:"admin" }).select("+password");
+    const admin = await usersModel
+        .findOne({ email, role: "admin" })
+        .select("+password");
     if (!admin) {
         return res.status(404).json({
             message: "Provided Admin does not exist, please register first",
@@ -131,14 +139,15 @@ const login = async (req, res) => {
                 .json({ message: "Invalid email or password" });
         }
         console.log("status(200)");
-        res.status(200).json({ token: generateToken(admin._id), expires_at: 7200 });
+        res.status(200).json({
+            token: generateToken(admin._id),
+            expires_at: 7200,
+        });
     } catch (error) {
         console.error("Error comparing passwords:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 };
-
-
 
 module.exports = {
     getOneAdmin,
