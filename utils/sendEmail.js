@@ -12,6 +12,9 @@ const sendEmail = async (recipientEmail, resetCode) => {
         user: "mostafa.i.elsayed95@gmail.com",
         pass: "tektctetqeipznho",
       },
+      tls: {
+        rejectUnauthorized: false,
+      },
     });
     const mail_configs = {
       from: "ITI Students",

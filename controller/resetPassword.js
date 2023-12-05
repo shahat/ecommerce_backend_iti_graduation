@@ -44,7 +44,7 @@ const resetPassword = async (req, res) => {
       },
       { new: true }
     );
-    console.log("UPDATED USER", updatedUser);
+    // console.log("UPDATED USER", updatedUser);
   
 
     if (!updatedUser) {

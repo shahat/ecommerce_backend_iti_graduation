@@ -2,20 +2,20 @@ const usersModel = require("../models/user");
 
 const resetCode = async (req, res) => {
   const { enteredCode } = req.body;
-  console.log("enteredCode From reset Code", enteredCode);
+  // console.log("enteredCode From reset Code", enteredCode);
 
   if (!enteredCode) {
     return res.status(400).json({ message: "Code is required" });
   } else {
     try {
       const user = await usersModel.findOne({ passwordResetCode: enteredCode });
-      console.log("is the user exist with the entered code? ->", user);
+      // console.log("is the user exist with the entered code? ->", user);
 
       const codeExpiresAt = user.passwordResetCodeExpires;
       const currentTime = new Date();
       const timeDifference = (codeExpiresAt - currentTime) / (1000 * 60);
 
-        console.log(timeDifference)
+        // console.log(timeDifference)
       if (user) {
         // res.status(200).json({ message: "Valid Code" });
 
