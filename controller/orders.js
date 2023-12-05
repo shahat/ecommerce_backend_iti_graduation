@@ -30,15 +30,14 @@ const getPastOrderOfOneUser = async (req, res) => {
   }
 };
 // ==============< getOneOrderById >==============
-const getAllOrdersForAdmin = async (req , res) =>{
+const getAllOrdersForAdmin = async (req, res) => {
   try {
     const allOrders = await ordersModel.find().populate("userId");
     res.status(200).json({ allOrders });
-  } catch (err) { 
-    res.status(400).json({error:`error : ${err}`});
-}
-}
-
+  } catch (err) {
+    res.status(400).json({ error: `error : ${err}` });
+  }
+};
 
 const getOneOrderById = async (req, res) => {
   let id = req.params.id;
@@ -87,7 +86,10 @@ const cancelOrder = async (req, res) => {
   var id = req.params.id;
   try {
     console.log(id);
-    const order = await ordersModel.updateOne({ _id: id } , {status : "canceled"});
+    const order = await ordersModel.updateOne(
+      { _id: id },
+      { status: "canceled" }
+    );
     res.status(200).json(order);
   } catch (err) {
     res.status(400).json(`error: ${err}`);
@@ -145,5 +147,6 @@ module.exports = {
   updatingOrders,
   cancelOrder,
   getComingOrderOfOneUser,
-  getAllOrders: getAllOrdersForAdmin
+  completedOrderProducts,
+  getAllOrders: getAllOrdersForAdmin,
 };
