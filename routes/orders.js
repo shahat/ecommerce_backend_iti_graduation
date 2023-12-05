@@ -8,7 +8,8 @@ var {
   createOrder,
   updatingOrders,
   cancelOrder,
-  getAllOrders
+  getAllOrders,
+  completedOrderProducts
 } = require("../controller/orders");
 const { tokenValidate } = require("../middlewares/isTokenValid");
 
