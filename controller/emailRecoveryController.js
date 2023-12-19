@@ -3,7 +3,7 @@ const sendEmail = require("../utils/sendEmail");
 
 const emailRecovery = async (req, res) => {
   const { email } = req.body;
-  console.log("this is the email from backend ", email);
+  // console.log("this is the email from backend ", email);
   try {
     const foundUser = await usersModel.findOne({ email });
     // console.log("foundUser111111", foundUser);
@@ -20,9 +20,9 @@ const emailRecovery = async (req, res) => {
     foundUser.passwordResetCodeExpires = new Date(Date.now() + 5 * 60 * 1000);
     await foundUser.save({ validateBeforeSave: false });
 
-    console.log("resetCode before sending email", resetCode);
+    // console.log("resetCode before sending email", resetCode);
     await sendEmail(foundUser.email, resetCode);
-    console.log("liveDB", foundUser);
+    // console.log("liveDB", foundUser);
 
     res.status(200).json({
       resetCode,

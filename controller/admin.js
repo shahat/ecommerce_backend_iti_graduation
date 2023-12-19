@@ -77,20 +77,20 @@ const addAdmin = async (req, res) => {
     const { email } = req.body;
 
     if (!email) {
-        return res.status(400).json({ message: "please provide your email " });
+        return res.status(404).json({ message: "please provide your email " });
     }
     const user = await usersModel.findOne({ email });
     const admin = await usersModel.findOne({ email, role: "admin" });
     try {
         if (admin) {
-            return res.status(400).json({
+            return res.status(401).json({
                 message:
-                    " This email is already assigned as Admin. You can use it to login to the dashboard. ",
+                    "This email is already assigned as Admin. You can use it to login to the dashboard.",
             });
         } else if (user) {
-            return res.status(400).json({
+            return res.status(403).json({
                 message:
-                    " This email is used for a user account. Choose another email ",
+                    "This email is used for a user account. Choose another email.",
             });
         }
         const newUser = await usersModel.create(req.body);
@@ -109,7 +109,6 @@ const addAdmin = async (req, res) => {
 // // =========================== Login ===========================
 
 const login = async (req, res) => {
-    console.log(req);
     const { email, password } = req.body;
     // Check if email & password are present in the request body
     if (!email || !password) {
@@ -128,16 +127,12 @@ const login = async (req, res) => {
     }
     try {
         const isValid = await bcrypt.compare(password, admin.password);
-        // console.log(isValid);
-        console.log("password", password);
-        // console.log("userPassword", admin.password);
 
         if (!isValid) {
             return res
                 .status(401)
                 .json({ message: "Invalid email or password" });
         }
-        console.log("status(200)");
         res.status(200).json({
             token: generateToken(admin._id),
             expires_at: 7200,

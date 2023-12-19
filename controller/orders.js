@@ -44,7 +44,7 @@ const getOneOrderById = async (req, res) => {
   console.log("this is product id ", id);
   try {
     const order = await ordersModel.find({ _id: id });
-    console.log("order ==============> ", order);
+    // console.log("order ==============> ", order);
 
     res.status(200).json({ order });
   } catch (err) {
