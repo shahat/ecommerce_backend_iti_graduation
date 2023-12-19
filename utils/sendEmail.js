@@ -32,4 +32,3 @@ const sendEmail = async (recipientEmail, resetCode) => {
 };
 
 module.exports = sendEmail;
-

@@ -8,7 +8,6 @@ function generateToken(id) {
         expiresIn: 7200, // 2h
     });
 }
-
 var userIdFromHeaders = (req) => {
     var userId;
     const { token } = req.headers;
